@@ -53,10 +53,10 @@ export async function GET(request: Request) {
         } else {
             console.log('✅ Order found:', order.id, 'Current status:', order.status)
 
-            // Update status
+            // Update status to 'paid' (matching the database CHECK constraint)
             const { error: updateError } = await supabase
                 .from('orders')
-                .update({ status: 'completed' }) // Or 'paid' depending on your schema
+                .update({ status: 'paid' })
                 .eq('id', order.id)
 
             if (updateError) {

@@ -52,8 +52,12 @@ export async function POST(request: Request) {
         let referenceId
         let authorizationUrl
 
-        // Paystack Payment Flow
-        const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout/success?orderId=${orderId}`
+        // Paystack Payment Flow - Use production URL if available
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
+            (process.env.NODE_ENV === 'production' ? 'https://gym-it.onrender.com' : 'http://localhost:3000')
+        const callbackUrl = `${baseUrl}/checkout/success?orderId=${orderId}`
+
+        console.log('💳 Payment callback URL:', callbackUrl)
 
         // If we are in dev mode and no keys, mock it
         if (!process.env.PAYSTACK_SECRET_KEY) {

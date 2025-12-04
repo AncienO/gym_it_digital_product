@@ -67,12 +67,20 @@ export async function verifyPaystackPayment(reference: string) {
         throw new Error('PAYSTACK_SECRET_KEY is not defined')
     }
 
+    const startTime = Date.now()
+    console.log('🔍 Starting Paystack verification for:', reference)
+
     const response = await fetch(`${PAYSTACK_API_URL}/transaction/verify/${reference}`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
         },
+        // Add timeout
+        signal: AbortSignal.timeout(15000) // 15 second timeout
     })
+
+    const fetchTime = Date.now() - startTime
+    console.log(`⏱️ Paystack API responded in ${fetchTime}ms`)
 
     if (!response.ok) {
         const error = await response.text()
@@ -80,5 +88,6 @@ export async function verifyPaystackPayment(reference: string) {
     }
 
     const data: PaystackVerifyResponse = await response.json()
+    console.log(`✅ Verification complete in ${Date.now() - startTime}ms, status:`, data.data.status)
     return data
 }
