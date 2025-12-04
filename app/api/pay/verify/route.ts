@@ -41,9 +41,18 @@ export async function GET(request: Request) {
 
         if (findError || !order) {
             // It's possible the order wasn't found if we are mocking or if something went wrong
-            console.error('Order not found for reference:', reference)
-            // For now, we return success if payment was verified, even if order update fails (though ideally we should fail)
+            console.error('❌ Order not found for reference:', reference, 'Error:', findError)
+            console.log('📊 Payment data received:', paymentData)
+
+            // Return error instead of success if order not found
+            return NextResponse.json({
+                error: 'Order not found',
+                reference,
+                details: findError
+            }, { status: 404 })
         } else {
+            console.log('✅ Order found:', order.id, 'Current status:', order.status)
+
             // Update status
             const { error: updateError } = await supabase
                 .from('orders')
@@ -51,8 +60,14 @@ export async function GET(request: Request) {
                 .eq('id', order.id)
 
             if (updateError) {
-                console.error('Failed to update order status:', updateError)
+                console.error('❌ Failed to update order status:', updateError)
+                return NextResponse.json({
+                    error: 'Failed to update order',
+                    details: updateError
+                }, { status: 500 })
             } else {
+                console.log('✅ Order status updated to completed for order:', order.id)
+
                 // 3. Create product_duration records for items with duration
                 const { data: orderItems } = await supabase
                     .from('order_items')
@@ -63,6 +78,8 @@ export async function GET(request: Request) {
                         )
                     `)
                     .eq('order_id', order.id)
+
+                console.log('📦 Order items fetched:', orderItems?.length || 0, 'items')
 
                 if (orderItems && orderItems.length > 0) {
                     const durationRecords = orderItems
@@ -99,14 +116,19 @@ export async function GET(request: Request) {
                         })
 
                     if (durationRecords.length > 0) {
+                        console.log('⏰ Creating', durationRecords.length, 'duration records')
                         const { error: durationError } = await supabase
                             .from('product_duration')
                             .insert(durationRecords)
 
                         if (durationError) {
-                            console.error('Failed to create duration records:', durationError)
+                            console.error('❌ Failed to create duration records:', durationError)
+                        } else {
+                            console.log('✅ Duration records created successfully')
                         }
                     }
+                } else {
+                    console.log('⚠️ No order items found or no items with duration')
                 }
             }
         }

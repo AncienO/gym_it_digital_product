@@ -14,23 +14,27 @@ function SuccessContent() {
     const [verificationError, setVerificationError] = useState<string | null>(null)
     const [orderItems, setOrderItems] = useState<any[]>([])
 
-    useEffect(() => {
-        // Fetch order items
-        const fetchOrderItems = async () => {
-            if (!orderId) return
+    const [retryCount, setRetryCount] = useState(0)
 
-            try {
-                const response = await fetch(`/api/orders/${orderId}`)
-                const data = await response.json()
+    const fetchOrderItems = async () => {
+        if (!orderId) return
 
-                if (response.ok && data.items) {
-                    setOrderItems(data.items)
-                }
-            } catch (error) {
-                console.error('Error fetching order items:', error)
+        try {
+            const response = await fetch(`/api/orders/${orderId}`)
+            const data = await response.json()
+
+            if (response.ok && data.items && data.items.length > 0) {
+                setOrderItems(data.items)
+                return true
             }
+            return false
+        } catch (error) {
+            console.error('Error fetching order items:', error)
+            return false
         }
+    }
 
+    useEffect(() => {
         fetchOrderItems()
     }, [orderId])
 
@@ -45,7 +49,20 @@ function SuccessContent() {
                         throw new Error(data.error || 'Payment verification failed')
                     }
 
-                    // Payment verified successfully
+                    // Payment verified successfully - NOW fetch order items
+                    // Wait a bit for database to update
+                    setTimeout(async () => {
+                        const success = await fetchOrderItems()
+
+                        // Retry if items not found (up to 3 times)
+                        if (!success && retryCount < 3) {
+                            setTimeout(async () => {
+                                await fetchOrderItems()
+                                setRetryCount(prev => prev + 1)
+                            }, 2000)
+                        }
+                    }, 1000)
+
                 } catch (error: any) {
                     console.error("Verification error:", error)
                     setVerificationError(error.message)
@@ -56,7 +73,7 @@ function SuccessContent() {
 
             verifyPayment()
         }
-    }, [reference])
+    }, [reference, retryCount])
 
     if (isVerifying) {
         return (
