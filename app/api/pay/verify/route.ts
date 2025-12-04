@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { verifyPaystackPayment } from '@/lib/paystack'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
@@ -29,8 +29,8 @@ export async function GET(request: Request) {
             }
         }
 
-        // 2. Update Order in Supabase
-        const supabase = await createClient()
+        // 2. Update Order in Supabase using admin client (bypasses RLS)
+        const supabase = createAdminClient()
 
         // Find order by reference
         const { data: order, error: findError } = await supabase

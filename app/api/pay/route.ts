@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { initializePaystackPayment } from '@/lib/paystack'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(request: Request) {
     try {
         const { amount, phoneNumber, email, items, provider = 'paystack' } = await request.json()
 
-        // 1. Create Order in Supabase
-        const supabase = await createClient()
+        // 1. Create Order in Supabase using admin client
+        const supabase = createAdminClient()
 
         // Create user profile if not exists (or just link to email)
         // For guest checkout, we might just store email in order
