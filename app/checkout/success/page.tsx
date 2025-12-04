@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle, Download } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { Suspense, useEffect, useState } from "react"
+import { useCart } from "@/context/CartContext"
 
 function SuccessContent() {
     const searchParams = useSearchParams()
@@ -13,6 +14,7 @@ function SuccessContent() {
     const [isVerifying, setIsVerifying] = useState(!!reference)
     const [verificationError, setVerificationError] = useState<string | null>(null)
     const [orderItems, setOrderItems] = useState<any[]>([])
+    const { clearCart } = useCart()
 
     const [retryCount, setRetryCount] = useState(0)
 
@@ -49,7 +51,10 @@ function SuccessContent() {
                         throw new Error(data.error || 'Payment verification failed')
                     }
 
-                    // Payment verified successfully - NOW fetch order items
+                    // Payment verified successfully - Clear the cart!
+                    clearCart()
+
+                    // NOW fetch order items
                     // Wait a bit for database to update
                     setTimeout(async () => {
                         const success = await fetchOrderItems()
