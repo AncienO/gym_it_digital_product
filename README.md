@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# gym-it Digital Products 💪
+
+A Next.js-based e-commerce platform for digital fitness products including workout plans, schedules, and fitness programs. Built with Next.js, Supabase, and integrated with MTN Mobile Money payment gateway.
+
+## Features
+
+- 🏋️ Digital fitness product catalog
+- 🛒 Shopping cart functionality
+- 💳 MTN Mobile Money payment integration via Paystack
+- 👤 User authentication and profiles
+- 📱 Fully responsive mobile-first design
+- 🔐 Admin dashboard for product management
+- 📧 Order management and email notifications
+- 🎨 Modern dark-themed UI with premium aesthetics
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth
+- **Payments:** Paystack (MTN Mobile Money)
+- **Styling:** Tailwind CSS
+- **UI Components:** Radix UI
+- **TypeScript:** For type safety
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ installed
+- Supabase account and project
+- Paystack account (for payment integration)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone git@github.com:AncienO/gym_it_digital_product.git
+cd gym_it_digital_product
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+gym_it_digital_product/
+├── app/                    # Next.js app directory
+│   ├── admin/             # Admin dashboard pages
+│   ├── api/               # API routes
+│   ├── auth/              # Authentication pages
+│   └── ...
+├── components/            # React components
+├── lib/                   # Utility functions
+├── public/                # Static assets
+├── supabase/             # Database migrations
+└── types/                # TypeScript type definitions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Database Setup
 
-## Deploy on Vercel
+Run the Supabase migrations in order:
+```bash
+# Apply migrations via Supabase CLI or dashboard
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The easiest way to deploy is using [Vercel](https://vercel.com):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AncienO/gym_it_digital_product)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is private and proprietary.
+
+## Contact
+
+For support or inquiries: [gym.it.digital@gmail.com](mailto:gym.it.digital@gmail.com)
