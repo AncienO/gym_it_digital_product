@@ -39,14 +39,37 @@ export default function CartPage() {
                 throw new Error(data.error || 'Payment failed')
             }
 
-            if (data.authorizationUrl) {
-                // Redirect to Paystack
-                window.location.href = data.authorizationUrl
-                return
-            }
+            // Use Paystack Inline (Popup) instead of redirect
+            if (data.referenceId && data.authorizationUrl) {
+                // @ts-ignore - PaystackPop is loaded from CDN
+                const handler = window.PaystackPop.setup({
+                    key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+                    email: email,
+                    amount: Math.round(total * 100), // Convert to kobo
+                    ref: data.referenceId,
+                    metadata: {
+                        custom_fields: [
+                            {
+                                display_name: "Phone Number",
+                                variable_name: "phone_number",
+                                value: phone
+                            }
+                        ]
+                    },
+                    onClose: function () {
+                        setIsProcessing(false)
+                        console.log('Payment popup closed')
+                    },
+                    callback: function (response: any) {
+                        // Payment successful!
+                        window.location.href = `/checkout/success?orderId=${data.orderId}&reference=${response.reference}`
+                    }
+                })
 
-            // Fallback if no auth URL (shouldn't happen for Paystack)
-            alert("Payment initiated!")
+                handler.openIframe()
+            } else {
+                throw new Error('Payment initialization failed')
+            }
 
         } catch (error: any) {
             console.error("Checkout error:", error)

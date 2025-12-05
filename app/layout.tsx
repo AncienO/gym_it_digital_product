@@ -20,6 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Paystack Inline Script */}
+        <script src="https://js.paystack.co/v1/inline.js"></script>
+      </head>
       <body className={`${inter.className} min-h-screen bg-black text-white antialiased flex flex-col`}>
         <ToastProvider />
         <CartProvider>
