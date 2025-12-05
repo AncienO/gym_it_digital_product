@@ -118,7 +118,9 @@ function SuccessContent() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Payment Successful!</h1>
             <p className="text-zinc-400 mb-8 max-w-md">
-                Thank you for your purchase. We've sent you a confirmation email. Download your Order below.
+                Thank you for your purchase.
+                <br />
+                We've sent you a confirmation email with your Order. <br /> Or download it below.
             </p>
 
             <div className="space-y-4 w-full max-w-md">

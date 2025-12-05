@@ -140,10 +140,10 @@ export async function GET(request: Request) {
                         const { sendDownloadEmail } = await import('@/lib/email')
 
                         // Build download URLs and product list
-                        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+                        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
                         const products = orderItems.map((item: any) => ({
                             name: item.products.name,
-                            downloadUrl: `${baseUrl}/api/download?orderId=${order.id}&productId=${item.products.id}`
+                            downloadUrl: `${baseUrl}/api/download/${order.id}/${item.products.id}`
                         }))
 
                         console.log('📧 Sending download email to:', order.customer_email)

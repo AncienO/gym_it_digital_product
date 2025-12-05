@@ -206,12 +206,12 @@ export default function CartPage() {
                                     />
 
                                     {/* Red Disclaimer */}
-                                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mt-2">
+                                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mt-2">
                                         <div className="flex gap-2">
-                                            <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                                            <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-xs text-red-400 font-semibold mb-1">IMPORTANT: Enter the correct email address</p>
-                                                <p className="text-xs text-red-300/90 leading-relaxed">
+                                                <p className="text-xs text-yellow-400 font-semibold mb-1">IMPORTANT: Enter the correct email address</p>
+                                                <p className="text-xs text-yellow-200/90 leading-relaxed">
                                                     Payment receipts and download links will be sent to this email.
                                                     Ensure it's correct to receive your purchased products.
                                                 </p>
@@ -233,12 +233,12 @@ export default function CartPage() {
                                     />
 
                                     {/* Red Disclaimer */}
-                                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mt-2">
+                                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mt-2">
                                         <div className="flex gap-2">
-                                            <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                                            <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-xs text-red-400 font-semibold mb-1">IMPORTANT: Enter the correct phone number</p>
-                                                <p className="text-xs text-red-300/90 leading-relaxed">
+                                                <p className="text-xs text-yellow-400 font-semibold mb-1">IMPORTANT: Enter the correct phone number</p>
+                                                <p className="text-xs text-yellow-200/90 leading-relaxed">
                                                     This number will be used for order updates, download links, and payment verification.
                                                     You will be asked to re-enter it during payment.
                                                 </p>
