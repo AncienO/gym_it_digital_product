@@ -123,7 +123,7 @@ function SuccessContent() {
 
             <div className="space-y-4 w-full max-w-md">
                 <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
-                    <h3 className="text-white font-semibold mb-4">Your Downloads</h3>
+                    <h3 className="text-white font-semibold mb-4">Download your Order below</h3>
                     <div className="space-y-3">
                         {orderItems.length > 0 ? (
                             orderItems.map((item) => (
