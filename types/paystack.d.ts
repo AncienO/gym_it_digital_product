@@ -5,8 +5,11 @@ interface PaystackPopSetupOptions {
     key: string
     email: string
     amount: number
+    currency?: string
     ref: string
+    phone?: string
     metadata?: {
+        [key: string]: any // Allow additional metadata properties
         custom_fields?: Array<{
             display_name: string
             variable_name: string

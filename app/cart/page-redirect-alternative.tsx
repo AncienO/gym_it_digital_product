@@ -4,13 +4,12 @@ import { useCart } from "@/context/CartContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Trash2, ArrowRight, Lock, AlertTriangle } from "lucide-react"
+import { Trash2, Lock } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import toast from "react-hot-toast"
 
-export default function CartPage() {
-    const { items, removeItem, total, clearCart } = useCart()
+export default function CartPageRedirect() {
+    const { items, removeItem, total } = useCart()
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [isProcessing, setIsProcessing] = useState(false)
@@ -40,94 +39,16 @@ export default function CartPage() {
                 throw new Error(data.error || 'Payment failed')
             }
 
-            // Use Paystack Inline V2 for better customer info pre-fill
-            if (data.referenceId && data.authorizationUrl) {
-                // Check if Paystack is loaded
-                // @ts-ignore - Paystack is loaded from CDN
-                if (typeof window.PaystackPop === 'undefined') {
-                    throw new Error('Paystack script not loaded. Please refresh the page and try again.')
-                }
-
-                const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
-                if (!publicKey) {
-                    throw new Error('Paystack public key not configured')
-                }
-
-                // Using PaystackPop.setup (V1) since V2 requires different script
-                // V1 doesn't support phone pre-fill, but we store it in metadata
-
-                // Set a timeout for payment (5 minutes)
-                const paymentTimeout = setTimeout(() => {
-                    setIsProcessing(false)
-                    toast.error('Payment session timed out. Please try again.', {
-                        duration: 5000,
-                        icon: '⏱️'
-                    })
-                }, 5 * 60 * 1000) // 5 minutes
-
-                // @ts-ignore - PaystackPop is loaded from CDN
-                const handler = window.PaystackPop.setup({
-                    key: publicKey,
-                    email: email,
-                    amount: Math.round(total * 100), // Convert to pesewas for GHS
-                    currency: 'GHS', // Ghana Cedis
-                    ref: data.referenceId,
-                    metadata: {
-                        phone_number: phone, // Store for backend reference
-                        custom_fields: [
-                            {
-                                display_name: "Phone Number",
-                                variable_name: "phone_number",
-                                value: phone
-                            }
-                        ]
-                    },
-                    onClose: function () {
-                        // Clear the timeout
-                        clearTimeout(paymentTimeout)
-                        setIsProcessing(false)
-
-                        // Show cancellation message
-                        toast.error('Payment cancelled. Your cart is still saved.', {
-                            duration: 4000,
-                            icon: '❌'
-                        })
-
-                        // Show retry prompt after a brief delay
-                        setTimeout(() => {
-                            toast('Ready to try again? Click the Pay button when ready.', {
-                                duration: 5000,
-                                icon: '💳'
-                            })
-                        }, 1500)
-
-                        console.log('Payment popup closed by user')
-                    },
-                    callback: function (response: any) {
-                        // Clear the timeout on successful payment
-                        clearTimeout(paymentTimeout)
-
-                        // Show success message
-                        toast.success('Payment successful! Redirecting...', {
-                            duration: 2000,
-                            icon: '✅'
-                        })
-
-                        // Payment successful - redirect to success page
-                        window.location.href = `/checkout/success?orderId=${data.orderId}&reference=${response.reference}`
-                    }
-                })
-
-                handler.openIframe()
+            // Redirect to Paystack hosted page (phone will be pre-filled there)
+            if (data.authorizationUrl) {
+                window.location.href = data.authorizationUrl
             } else {
                 throw new Error('Payment initialization failed')
             }
 
         } catch (error: any) {
             console.error("Checkout error:", error)
-            toast.error(error.message || 'Payment failed. Please try again.', {
-                duration: 5000
-            })
+            alert(error.message)
             setIsProcessing(false)
         }
     }
@@ -194,7 +115,7 @@ export default function CartPage() {
                             <h2 className="text-xl font-semibold text-white mb-6">Payment Details</h2>
                             <form onSubmit={handleCheckout} className="space-y-6">
                                 <div className="space-y-2">
-                                    <Label htmlFor="email" className="text-zinc-300">Email Address *</Label>
+                                    <Label htmlFor="email" className="text-zinc-300">Email Address</Label>
                                     <Input
                                         id="email"
                                         type="email"
@@ -204,24 +125,11 @@ export default function CartPage() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
-
-                                    {/* Red Disclaimer */}
-                                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mt-2">
-                                        <div className="flex gap-2">
-                                            <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
-                                            <div>
-                                                <p className="text-xs text-red-400 font-semibold mb-1">IMPORTANT: Enter the correct email address</p>
-                                                <p className="text-xs text-red-300/90 leading-relaxed">
-                                                    Payment receipts and download links will be sent to this email.
-                                                    Ensure it's correct to receive your purchased products.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p className="text-xs text-zinc-500">Payment reciept will be sent to this email.</p>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="phone" className="text-zinc-300">Phone Number *</Label>
+                                    <Label htmlFor="phone" className="text-zinc-300">Phone Number</Label>
                                     <Input
                                         id="phone"
                                         type="tel"
@@ -231,36 +139,16 @@ export default function CartPage() {
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
                                     />
-
-                                    {/* Red Disclaimer */}
-                                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 mt-2">
-                                        <div className="flex gap-2">
-                                            <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
-                                            <div>
-                                                <p className="text-xs text-red-400 font-semibold mb-1">IMPORTANT: Enter the correct phone number</p>
-                                                <p className="text-xs text-red-300/90 leading-relaxed">
-                                                    This number will be used for order updates, download links, and payment verification.
-                                                    You will be asked to re-enter it during payment.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p className="text-xs text-zinc-500">For order updates.</p>
                                 </div>
 
                                 <div className="pt-4">
                                     <Button
                                         type="submit"
-                                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-6 text-lg font-semibold"
                                         disabled={isProcessing}
                                     >
-                                        {isProcessing ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <span className="animate-spin">⏳</span>
-                                                Processing Payment...
-                                            </span>
-                                        ) : (
-                                            `Pay GHS ${total.toFixed(2)}`
-                                        )}
+                                        {isProcessing ? "Redirecting to Payment..." : `Pay GHS ${total.toFixed(2)}`}
                                     </Button>
                                     <div className="flex items-center justify-center gap-2 mt-4 text-xs text-zinc-500">
                                         <Lock className="h-3 w-3" />
