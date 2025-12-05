@@ -57,7 +57,7 @@ function generateDownloadEmailHTML({ customerName, orderNumber, products }: Omit
 
         <!-- Content -->
         <div style="padding: 40px 30px;">
-            <h2 style="margin: 0 0 20px 0; color: #10b981; font-size: 24px;">Thank You for Your Purchase! 🎉</h2>
+            <h2 style="margin: 0 0 20px 0; color: #10b981; font-size: 24px;">Thank You for Your Purchase!</h2>
             
             <p style="margin: 0 0 15px 0; color: #d4d4d8; line-height: 1.6;">
                 Hi ${customerName || 'there'},
@@ -81,7 +81,7 @@ function generateDownloadEmailHTML({ customerName, orderNumber, products }: Omit
                     <p style="margin: 0 0 15px 0; color: #ffffff; font-size: 16px; font-weight: 600;">${index + 1}. ${product.name}</p>
                     <a href="${product.downloadUrl}" 
                        style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 14px;">
-                        📥 Download Now
+                        Download Now
                     </a>
                 </div>
             `).join('')}
