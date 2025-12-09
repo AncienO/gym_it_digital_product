@@ -30,13 +30,13 @@ export default async function Home() {
           <div className="max-w-2xl space-y-8">
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">
               Don't know where to start on your Fitness journey? <br /> <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
+              <span className="text-emerald-500">
                 Start here.
               </span>
             </h1>
             <p className="text-xl text-zinc-300 leading-relaxed">
               Premium digital training programs backed by research to reach your fitness goals.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
+              <span className="text-emerald-500">
                 Download instantly and start your journey today.
               </span>
             </p>

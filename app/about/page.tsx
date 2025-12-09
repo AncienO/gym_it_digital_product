@@ -19,7 +19,7 @@ export default function AboutPage() {
 
                 <div className="container relative z-20 px-4 mx-auto text-center">
                     <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6">
-                        About <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">gym-it</span>
+                        About <span className="text-transparent bg-clip-text bg-gradient-to-r from-black-600 to-emerald-500">gym-it</span>
                     </h1>
                     <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
                         Gym-it is a fitness organization dedicated to giving you a platform in starting your fitness journey. Individuals do not start, not because they do not want a healthy lifestyle or fit body, but because they do not know where to start from. Gym-it provides the launchpad to get you started, all you have to do is just gym-it.
@@ -33,7 +33,7 @@ export default function AboutPage() {
                     <div className="max-w-4xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold text-white mb-4">My Mission</h2>
-                            <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-cyan-500 mx-auto"></div>
+                            <div className="w-20 h-1 bg-gradient-to-r from-black-600 to-emerald-500 mx-auto"></div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-8">
@@ -63,7 +63,7 @@ export default function AboutPage() {
                     <div className="max-w-4xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold text-white mb-4">Meet the Founder</h2>
-                            <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-cyan-500 mx-auto"></div>
+                            <div className="w-20 h-1 bg-gradient-to-r from-black-600 to-emerald-500 mx-auto"></div>
                         </div>
 
                         <div className="bg-zinc-900/50 p-8 md:p-12 rounded-2xl border border-zinc-800">
@@ -95,7 +95,7 @@ export default function AboutPage() {
                     <div className="max-w-4xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold text-white mb-4">What I Stand For</h2>
-                            <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-cyan-500 mx-auto"></div>
+                            <div className="w-20 h-1 bg-gradient-to-r from-black-600 to-emerald-500 mx-auto"></div>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-6">

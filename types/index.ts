@@ -16,6 +16,7 @@ export interface Database {
                     description: string | null
                     price: number
                     duration: string | null
+                    duration_weeks: number | null
                     image_url: string | null
                     file_url: string
                     is_active: boolean
@@ -27,6 +28,7 @@ export interface Database {
                     description?: string | null
                     price: number
                     duration?: string | null
+                    duration_weeks?: number | null
                     image_url?: string | null
                     file_url: string
                     is_active?: boolean
@@ -38,6 +40,7 @@ export interface Database {
                     description?: string | null
                     price?: number
                     duration?: string | null
+                    duration_weeks?: number | null
                     image_url?: string | null
                     file_url?: string
                     is_active?: boolean
