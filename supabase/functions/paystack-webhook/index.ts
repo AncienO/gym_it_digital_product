@@ -78,8 +78,7 @@ Deno.serve(async (req: Request) => {
                 .from('orders')
                 .update({
                     status: 'paid',
-                    payment_reference: reference,
-                    updated_at: new Date().toISOString()
+                    payment_reference: reference
                 })
                 .eq('id', orderId)
 
