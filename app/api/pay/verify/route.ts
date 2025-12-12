@@ -131,44 +131,9 @@ export async function GET(request: Request) {
                         }
                     }
 
-                    // 4. Send download email to customer
-                    console.log('🔍 Email check - customer_email:', order.customer_email)
-                    console.log('🔍 Email check - GMAIL_APP_PASSWORD exists:', !!process.env.GMAIL_APP_PASSWORD)
-                    console.log('🔍 Email check - orderItems count:', orderItems?.length)
-
-                    if (order.customer_email && process.env.GMAIL_APP_PASSWORD) {
-                        const { sendDownloadEmail } = await import('@/lib/email')
-
-                        // Build download URLs and product list
-                        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-                        const products = orderItems.map((item: any) => ({
-                            name: item.products.name,
-                            downloadUrl: `${baseUrl}/api/download/${order.id}/${item.products.id}`
-                        }))
-
-                        console.log('📧 Sending download email to:', order.customer_email)
-                        console.log('📧 Products in email:', products.length)
-
-                        const emailResult = await sendDownloadEmail({
-                            to: order.customer_email,
-                            customerName: order.customer_email.split('@')[0], // Use email username as name
-                            orderNumber: order.id.substring(0, 8).toUpperCase(),
-                            products
-                        })
-
-                        if (emailResult.success) {
-                            console.log('✅ Download email sent successfully')
-                        } else {
-                            console.error('❌ Failed to send download email:', emailResult.error)
-                        }
-                    } else {
-                        if (!order.customer_email) {
-                            console.log('⚠️ No customer email found, skipping email')
-                        }
-                        if (!process.env.GMAIL_APP_PASSWORD) {
-                            console.log('⚠️ GMAIL_APP_PASSWORD not configured, skipping email')
-                        }
-                    }
+                    // 4. Email sending is now handled by the Webhook to prevent duplicates
+                    // If we kept it here, the user would get two emails.
+                    console.log('📧 Skipping email in verify route, handled by webhook')
                 } else {
                     console.log('⚠️ No order items found or no items with duration')
                 }
