@@ -28,8 +28,8 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <Card className="overflow-hidden border border-zinc-800 hover:border-zinc-700 shadow-lg bg-zinc-900/50 backdrop-blur-sm hover:bg-zinc-900/80 transition-all duration-300 group">
-            <div className="aspect-square relative overflow-hidden bg-zinc-800">
+        <Card className="overflow-hidden border border-zinc-800 hover:border-zinc-700 shadow-lg bg-zinc-900/50 backdrop-blur-sm hover:bg-zinc-900/80 transition-all duration-300 group h-full flex flex-col">
+            <div className="aspect-square relative overflow-hidden bg-zinc-800 shrink-0">
                 {/* Placeholder for image if null */}
                 {product.image_url ? (
                     <img
@@ -44,12 +44,12 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
             </div>
             <CardHeader>
-                <CardTitle className="text-xl font-bold text-white">{product.name}</CardTitle>
+                <CardTitle className="text-xl font-bold text-white line-clamp-1">{product.name}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col flex-1">
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <p className="text-zinc-400 line-clamp-2 text-sm whitespace-pre-wrap cursor-help">{product.description}</p>
+                        <p className="text-zinc-400 line-clamp-3 text-sm whitespace-pre-wrap cursor-help mb-4">{product.description}</p>
                     </TooltipTrigger>
                     <TooltipContent
                         side="top"
@@ -59,7 +59,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         <p className="text-sm whitespace-pre-wrap">{product.description}</p>
                     </TooltipContent>
                 </Tooltip>
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center justify-between mt-auto pt-2">
                     <div className="text-2xl font-bold text-emerald-400">
                         GHS {product.price.toFixed(2)}
                     </div>
@@ -70,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     )}
                 </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
                 <Button
                     className={`w-full font-semibold transition-all duration-300 ${isInCart ? 'bg-zinc-700 hover:bg-zinc-700 text-zinc-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                         }`}
