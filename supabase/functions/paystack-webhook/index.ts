@@ -96,6 +96,7 @@ Deno.serve(async (req: Request) => {
                 .from('order_items')
                 .select(`
                     id,
+                    product_id,
                     products (
                         name,
                         file_url
@@ -115,7 +116,7 @@ Deno.serve(async (req: Request) => {
 
             const productsList = orderItems?.map((item: any) => ({
                 name: item.products?.name,
-                downloadUrl: `${appUrl}/api/download/${orderId}/${item.products?.id}` // Redirects to secure download route
+                downloadUrl: `${appUrl}/api/download/${orderId}/${item.product_id}` // Redirects to secure download route
             })) || []
 
             // 3. Send Email
