@@ -7,7 +7,7 @@ export default async function ProductsPage() {
         .from('products')
         .select('*')
         .eq('is_active', true)
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: true })
 
     return (
         <div className="min-h-screen bg-black py-12">

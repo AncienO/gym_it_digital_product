@@ -11,7 +11,7 @@ export default async function Home() {
     .select('*')
     .eq('is_active', true)
     .limit(3)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: true })
 
   return (
     <div className="flex flex-col min-h-screen">
