@@ -50,7 +50,10 @@ export async function initializePaystackPayment(email: string, amount: number, c
             callback_url: callbackUrl,
             metadata,
             currency: 'GHS', // Assuming GHS for this project
+            channels: ['card', 'mobile_money'],
         }),
+        signal: AbortSignal.timeout(20000), // 20s timeout
+        cache: 'no-store',
     })
 
     if (!response.ok) {
