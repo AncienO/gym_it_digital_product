@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
 ) {
     try {
         const { orderId, productId } = await params
-        const supabase = await createClient()
+        const supabase = await createAdminClient()
 
         // 1. Verify Order and Ownership
         // We need to check if this order actually contains this product
