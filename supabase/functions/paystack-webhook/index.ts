@@ -1,6 +1,12 @@
 
+import { Buffer } from "node:buffer"
 import { createClient } from "@supabase/supabase-js"
 import nodemailer from "nodemailer"
+
+// Polyfill Buffer for nodemailer
+if (!globalThis.Buffer) {
+    (globalThis as any).Buffer = Buffer;
+}
 
 console.log("Paystack Webhook Function Initialized")
 
