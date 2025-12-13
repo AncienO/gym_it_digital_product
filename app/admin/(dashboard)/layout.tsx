@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { LayoutDashboard, Package, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { MobileNav } from "@/components/admin/MobileNav"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 
@@ -29,9 +30,12 @@ export default async function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen bg-black flex">
+        <div className="min-h-screen bg-black flex flex-col md:flex-row">
+            {/* Mobile Navigation */}
+            <MobileNav />
+
             {/* Sidebar */}
-            <aside className="w-64 bg-zinc-900 border-r border-zinc-800 hidden md:flex flex-col">
+            <aside className="w-64 bg-zinc-900 border-r border-zinc-800 hidden md:flex flex-col h-screen sticky top-0">
                 <div className="p-6 border-b border-zinc-800">
                     <h1 className="text-xl font-bold text-white tracking-tighter">
                         gym-it <span className="text-emerald-500">Admin</span>
@@ -65,7 +69,7 @@ export default async function AdminLayout({
 
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">
-                <div className="p-8">
+                <div className="p-4 md:p-8">
                     {children}
                 </div>
             </main>
