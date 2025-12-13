@@ -74,7 +74,7 @@ export default async function Home() {
             <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800">
               <Trophy className="h-12 w-12 text-purple-500 mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">Athletic Performance</h3>
-              <p className="text-zinc-400">Play better on the field, and become more dominant and injury-free.</p>
+              <p className="text-zinc-400">Move better and prevent injury.</p>
             </div>
           </div>
         </div>
