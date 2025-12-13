@@ -70,7 +70,7 @@ export default function AboutPage() {
                             <div className="flex flex-col md:flex-row gap-8 items-center">
                                 <div className="relative w-48 h-48 bg-zinc-800 rounded-full flex-shrink-0 overflow-hidden">
                                     <Image
-                                        src="/jonathan_gym-it.jpg"
+                                        src="/founder.jpg"
                                         alt="Jonathan Odonkor"
                                         fill
                                         className="object-cover"
