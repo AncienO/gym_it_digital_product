@@ -107,7 +107,6 @@ export function ProductForm({ product }: ProductFormProps) {
 
             // Upload Product File
             if (productFile) {
-                // For secure files, we might want signed URLs, but for simplicity using public bucket or assuming RLS on storage
                 // Let's use 'product-files' bucket
                 fileUrl = await handleUpload(productFile, 'product-files')
             }
@@ -152,132 +151,180 @@ export function ProductForm({ product }: ProductFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
-            <div className="space-y-4 bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
-                <div className="space-y-2">
-                    <Label htmlFor="name" className="text-zinc-300">Product Name</Label>
-                    <Input
-                        id="name"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="description" className="text-zinc-300">Description</Label>
-                    <SimpleTextarea
-                        id="description"
-                        value={description}
-                        onChange={(e: any) => setDescription(e.target.value)}
-                        rows={4}
-                    />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="price" className="text-zinc-300">Price (GHS)</Label>
-                        <Input
-                            id="price"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="duration" className="text-zinc-300">Duration (e.g. 4 Weeks)</Label>
-                        <Input
-                            id="duration"
-                            value={duration}
-                            onChange={(e) => setDuration(e.target.value)}
-                            placeholder="Optional"
-                            className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-2 pt-2">
-                    <input
-                        type="checkbox"
-                        id="isActive"
-                        checked={isActive}
-                        onChange={(e) => setIsActive(e.target.checked)}
-                        className="h-4 w-4 rounded border-zinc-800 bg-zinc-950 text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <Label htmlFor="isActive" className="text-zinc-300 cursor-pointer">Active (Visible to users)</Label>
-                </div>
-            </div>
-
-            <div className="space-y-4 bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
-                <h3 className="text-lg font-medium text-white">Media & Files</h3>
-
-                <div className="space-y-2">
-                    <Label className="text-zinc-300">Product Image</Label>
-                    <div className="flex items-start gap-4">
-                        <div className="h-32 w-32 bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden flex items-center justify-center relative group">
-                            {imageFile ? (
-                                <img src={URL.createObjectURL(imageFile)} alt="Preview" className="h-full w-full object-cover" />
-                            ) : currentImageUrl ? (
-                                <img src={currentImageUrl} alt="Current" className="h-full w-full object-cover" />
-                            ) : (
-                                <Upload className="h-8 w-8 text-zinc-700" />
-                            )}
-                        </div>
-                        <div className="flex-1">
+        <form onSubmit={handleSubmit} className="space-y-8 w-full">
+            <div className="space-y-8">
+                {/* Main Info */}
+                <div className="space-y-6">
+                    <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-zinc-300">Product Name</Label>
                             <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                                className="bg-zinc-950 border-zinc-800 text-zinc-400 file:text-white file:bg-zinc-800 file:border-0 file:mr-4 file:px-4 file:py-2 file:rounded-md hover:file:bg-zinc-700"
+                                id="name"
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 transition-colors h-11"
+                                placeholder="e.g. 12 Week Strength Program"
                             />
-                            <p className="text-xs text-zinc-500 mt-2">Recommended: 800x800px JPG or PNG</p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="description" className="text-zinc-300">Description</Label>
+                            <SimpleTextarea
+                                id="description"
+                                value={description}
+                                onChange={(e: any) => setDescription(e.target.value)}
+                                rows={6}
+                                className="resize-none"
+                                placeholder="Describe what the user gets..."
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="price" className="text-zinc-300">Price (GHS)</Label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">GHS</span>
+                                    <Input
+                                        id="price"
+                                        type="number"
+                                        step="0.01"
+                                        required
+                                        value={price}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 pl-12 h-11"
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="duration" className="text-zinc-300">Duration</Label>
+                                <Input
+                                    id="duration"
+                                    value={duration}
+                                    onChange={(e) => setDuration(e.target.value)}
+                                    placeholder="e.g. 4 Weeks"
+                                    className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 h-11"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label className="text-zinc-300">Digital Product File</Label>
-                    <div className="flex items-center gap-4">
-                        <Input
-                            type="file"
-                            onChange={(e) => setProductFile(e.target.files?.[0] || null)}
-                            className="bg-zinc-950 border-zinc-800 text-zinc-400 file:text-white file:bg-zinc-800 file:border-0 file:mr-4 file:px-4 file:py-2 file:rounded-md hover:file:bg-zinc-700"
-                        />
+                {/* Right Column: Media, Status, Actions */}
+                <div className="space-y-6">
+                    {/* Status Card */}
+                    <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
+                        <h3 className="text-lg font-medium text-white mb-4">Availability</h3>
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-950 border border-zinc-800">
+                            <input
+                                type="checkbox"
+                                id="isActive"
+                                checked={isActive}
+                                onChange={(e) => setIsActive(e.target.checked)}
+                                className="h-5 w-5 rounded border-zinc-700 bg-zinc-900 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer"
+                            />
+                            <Label htmlFor="isActive" className="text-zinc-300 cursor-pointer flex-1 select-none">
+                                Active & Visible
+                            </Label>
+                        </div>
                     </div>
-                    {currentFileUrl && (
-                        <p className="text-xs text-emerald-500">Current file: {currentFileUrl.split('/').pop()}</p>
-                    )}
-                </div>
-            </div>
 
-            <div className="flex gap-4">
-                <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => router.back()}
-                    className="text-zinc-400 hover:text-white"
-                >
-                    Cancel
-                </Button>
-                <Button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[120px]"
-                >
-                    {loading ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
-                        </>
-                    ) : (
-                        "Save Product"
-                    )}
-                </Button>
+                    {/* Media Card */}
+                    <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 space-y-6">
+                        <h3 className="text-lg font-medium text-white">Media & Files</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Cover Image */}
+                            <div className="space-y-3">
+                                <Label className="text-zinc-300">Cover Image</Label>
+                                <div className="relative group">
+                                    <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700">
+                                        {imageFile ? (
+                                            <img src={URL.createObjectURL(imageFile)} alt="Preview" className="h-full w-full object-cover" />
+                                        ) : currentImageUrl ? (
+                                            <img src={currentImageUrl} alt="Current" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <div className="text-center p-4">
+                                                <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
+                                                <span className="text-xs text-zinc-500 block">Upload Image</span>
+                                            </div>
+                                        )}
+                                        <Input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mt-2 text-center">Rec: 16:9 or 4:3</p>
+                                </div>
+                            </div>
+
+                            {/* Product File */}
+                            <div className="space-y-3">
+                                <Label className="text-zinc-300">Product File</Label>
+                                <div className="relative group">
+                                    <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700">
+                                        {productFile ? (
+                                            <div className="text-center p-4">
+                                                <div className="h-8 w-8 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                                                    <Upload className="h-4 w-4" />
+                                                </div>
+                                                <span className="text-xs text-emerald-500 block font-medium truncate max-w-[150px]">{productFile.name}</span>
+                                            </div>
+                                        ) : currentFileUrl ? (
+                                            <div className="text-center p-4">
+                                                <div className="h-8 w-8 bg-zinc-800 text-zinc-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                                                    <Upload className="h-4 w-4" />
+                                                </div>
+                                                <span className="text-xs text-zinc-400 block font-medium truncate max-w-[150px]">Current: {currentFileUrl.split('/').pop()}</span>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center p-4">
+                                                <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
+                                                <span className="text-xs text-zinc-500 block">Upload File</span>
+                                            </div>
+                                        )}
+                                        <Input
+                                            type="file"
+                                            onChange={(e) => setProductFile(e.target.files?.[0] || null)}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mt-2 text-center">PDF, ZIP, etc.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="grid grid-cols-2 gap-4 pt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => router.back()}
+                            className="bg-transparent border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 h-12"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white h-12 font-medium"
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                "Save Product"
+                            )}
+                        </Button>
+                    </div>
+                </div>
             </div>
         </form>
     )
