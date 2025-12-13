@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Dumbbell, Zap, Trophy } from "lucide-react"
+import { ArrowRight, Dumbbell, Zap, Trophy, Weight, Wand } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
 import { createClient } from "@/lib/supabase/server"
 
@@ -62,12 +62,12 @@ export default async function Home() {
         <div className="container px-4 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800">
-              <Dumbbell className="h-12 w-12 text-emerald-500 mb-4" />
+              <Wand className="h-12 w-12 text-emerald-500 mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">Expert Design</h3>
               <p className="text-zinc-400">Programs backed by research to ensure maximum results.</p>
             </div>
             <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800">
-              <Zap className="h-12 w-12 text-cyan-500 mb-4" />
+              <Dumbbell className="h-12 w-12 text-cyan-500 mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">Strength Training</h3>
               <p className="text-zinc-400">Available programs for building your physique.</p>
             </div>
