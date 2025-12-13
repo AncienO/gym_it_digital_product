@@ -78,14 +78,25 @@ export async function GET(
         const watermarkText = `Licensed to ${item.orders?.customer_email} - Order #${orderId.slice(0, 8)}`
 
         for (const page of pages) {
-            const { width } = page.getSize()
+            const { width, height } = page.getSize()
 
+            // Top Left
             page.drawText(watermarkText, {
-                x: 20, // Align to left
+                x: 20,
+                y: height - 20,
+                size: 10,
+                font: font,
+                color: rgb(0.06, 0.73, 0.5), // Emerald Green
+                opacity: 0.8,
+            })
+
+            // Bottom Left
+            page.drawText(watermarkText, {
+                x: 20,
                 y: 20,
                 size: 10,
                 font: font,
-                color: rgb(0.06, 0.73, 0.5), // Emerald-500 approx (#10b981)
+                color: rgb(0.06, 0.73, 0.5), // Emerald Green
                 opacity: 0.8,
             })
         }

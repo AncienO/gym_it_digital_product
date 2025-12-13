@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button"
 import { Plus, Edit, Trash2, MoreHorizontal } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { DeleteButton } from "./DeleteButton"
+import { ReorderButtons } from "./ReorderButtons"
 
 export default async function AdminProductsPage() {
     const supabase = await createClient()
     const { data: products } = await supabase
         .from('products')
         .select('*')
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false })
 
     return (
@@ -32,6 +34,7 @@ export default async function AdminProductsPage() {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-zinc-900 text-zinc-400 font-medium">
                             <tr>
+                                <th className="px-6 py-4 w-12 text-center">Order</th>
                                 <th className="px-6 py-4">Name</th>
                                 <th className="px-6 py-4">Price</th>
                                 <th className="px-6 py-4">Status</th>
@@ -40,8 +43,15 @@ export default async function AdminProductsPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
-                            {products?.map((product) => (
+                            {products?.map((product, index) => (
                                 <tr key={product.id} className="hover:bg-zinc-900/30 transition-colors">
+                                    <td className="px-6 py-4 text-center">
+                                        <ReorderButtons
+                                            productId={product.id}
+                                            isFirst={index === 0}
+                                            isLast={index === (products.length - 1)}
+                                        />
+                                    </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 bg-zinc-800 rounded-md overflow-hidden flex-shrink-0">
@@ -78,7 +88,7 @@ export default async function AdminProductsPage() {
                             ))}
                             {(!products || products.length === 0) && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-zinc-500">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
                                         No products found. Create one to get started.
                                     </td>
                                 </tr>
@@ -90,7 +100,7 @@ export default async function AdminProductsPage() {
 
             {/* Mobile Card View */}
             <div className="md:hidden space-y-4">
-                {products?.map((product) => (
+                {products?.map((product, index) => (
                     <div key={product.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 space-y-4">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
@@ -104,12 +114,21 @@ export default async function AdminProductsPage() {
                                     <p className="text-sm text-zinc-400">GHS {product.price.toFixed(2)}</p>
                                 </div>
                             </div>
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.is_active
-                                ? 'bg-emerald-500/10 text-emerald-500'
-                                : 'bg-zinc-800 text-zinc-400'
-                                }`}>
-                                {product.is_active ? 'Active' : 'Draft'}
-                            </span>
+                            <div className="flex flex-col items-end gap-2">
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.is_active
+                                    ? 'bg-emerald-500/10 text-emerald-500'
+                                    : 'bg-zinc-800 text-zinc-400'
+                                    }`}>
+                                    {product.is_active ? 'Active' : 'Draft'}
+                                </span>
+                                <div className="flex">
+                                    <ReorderButtons
+                                        productId={product.id}
+                                        isFirst={index === 0}
+                                        isLast={index === (products.length - 1)}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
