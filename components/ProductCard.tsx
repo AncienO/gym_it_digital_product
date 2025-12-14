@@ -44,7 +44,18 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
             </div>
             <CardHeader>
-                <CardTitle className="text-xl font-bold text-white line-clamp-1">{product.name}</CardTitle>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <CardTitle className="text-xl font-bold text-white line-clamp-1 cursor-help">{product.name}</CardTitle>
+                    </TooltipTrigger>
+                    <TooltipContent
+                        side="top"
+                        className="max-w-sm bg-zinc-800 text-zinc-100 border border-zinc-700 p-3"
+                        sideOffset={5}
+                    >
+                        <p className="font-bold">{product.name}</p>
+                    </TooltipContent>
+                </Tooltip>
             </CardHeader>
             <CardContent className="flex flex-col flex-1">
                 <Tooltip>
