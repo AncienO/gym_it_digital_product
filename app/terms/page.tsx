@@ -39,7 +39,7 @@ export default function TermsPage() {
                     <section className="space-y-4">
                         <h2 className="text-2xl font-semibold text-white">3. Payments & Refunds</h2>
                         <p className="leading-relaxed">
-                            All payments are processed securely through our payment providers (e.g., MTN Mobile Money). Due to the nature of digital products, all sales are final and non-refundable once the download link has been provided, unless the file is technically defective.
+                            All payments are processed securely through our payment provider (Paystack). Due to the nature of digital products, all sales are final and non-refundable once the download link has been provided, unless the file is technically defective.
                         </p>
                     </section>
 
