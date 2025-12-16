@@ -10,7 +10,7 @@ export default async function Home() {
     .from('products')
     .select('*')
     .eq('is_active', true)
-    .limit(3)
+    .limit(6)
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
 
