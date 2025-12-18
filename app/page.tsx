@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Dumbbell, Zap, Trophy, Weight, Wand } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
+import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function Home() {
@@ -100,6 +101,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
     </div>
   )
 }

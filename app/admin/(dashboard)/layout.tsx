@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { LayoutDashboard, Package, LogOut } from "lucide-react"
+import { LayoutDashboard, Package, LogOut, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MobileNav } from "@/components/admin/MobileNav"
 import { createClient } from "@/lib/supabase/server"
@@ -53,6 +53,12 @@ export default async function AdminLayout({
                         <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
                             <Package className="mr-2 h-4 w-4" />
                             Products
+                        </Button>
+                    </Link>
+                    <Link href="/admin/testimonials">
+                        <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
+                            <MessageSquare className="mr-2 h-4 w-4" />
+                            Testimonials
                         </Button>
                     </Link>
                 </nav>

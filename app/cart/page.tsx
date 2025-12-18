@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Trash2, ArrowRight, Lock, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { TestimonialsSectionClient } from "@/components/TestimonialsSectionClient"
 import toast from "react-hot-toast"
 
 export default function CartPage() {
@@ -271,6 +272,11 @@ export default function CartPage() {
                         </div>
                     </div>
                 </div>
+            </div>
+            {/* Testimonials */}
+            {/* Testimonials */}
+            <div className="mt-20">
+                <TestimonialsSectionClient />
             </div>
         </div>
     )

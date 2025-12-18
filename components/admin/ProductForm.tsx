@@ -62,7 +62,7 @@ export function ProductForm({ product }: ProductFormProps) {
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState(product?.name || "")
     const [description, setDescription] = useState(product?.description || "")
-    const [price, setPrice] = useState(product?.price || "")
+    const [price, setPrice] = useState(product?.price?.toString() || "")
     const [duration, setDuration] = useState(product?.duration || "")
     const [isActive, setIsActive] = useState(product?.is_active ?? true)
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -95,6 +95,18 @@ export function ProductForm({ product }: ProductFormProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
+
+        if (!name.trim()) {
+            toast.error("Please enter a product name")
+            setLoading(false)
+            return
+        }
+
+        if (!price.trim()) {
+            toast.error("Please enter a price")
+            setLoading(false)
+            return
+        }
 
         try {
             let imageUrl = currentImageUrl
@@ -160,7 +172,6 @@ export function ProductForm({ product }: ProductFormProps) {
                             <Label htmlFor="name" className="text-zinc-300">Product Name</Label>
                             <Input
                                 id="name"
-                                required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 transition-colors h-11"
@@ -189,7 +200,6 @@ export function ProductForm({ product }: ProductFormProps) {
                                         id="price"
                                         type="number"
                                         step="0.01"
-                                        required
                                         value={price}
                                         onChange={(e) => setPrice(e.target.value)}
                                         className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 pl-12 h-11"

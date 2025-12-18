@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Lock } from "lucide-react"
 import { createBrowserClient } from '@supabase/ssr'
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 export function AdminLoginForm() {
     const [email, setEmail] = useState("")
@@ -25,6 +26,12 @@ export function AdminLoginForm() {
         e.preventDefault()
         setLoading(true)
         setError(null)
+
+        if (!email.trim() || !password.trim()) {
+            toast.error("Please fill in all fields")
+            setLoading(false)
+            return
+        }
 
         try {
             const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -53,7 +60,7 @@ export function AdminLoginForm() {
                 router.refresh()
             }
         } catch (err: any) {
-            setError(err.message)
+            toast.error(err.message)
         } finally {
             setLoading(false)
         }
@@ -83,7 +90,6 @@ export function AdminLoginForm() {
                                 name="email"
                                 type="email"
                                 autoComplete="email"
-                                required
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
                                 placeholder="admin@example.com"
                                 value={email}
@@ -97,7 +103,6 @@ export function AdminLoginForm() {
                                 name="password"
                                 type="password"
                                 autoComplete="current-password"
-                                required
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
                                 placeholder="••••••••"
                                 value={password}
@@ -106,11 +111,7 @@ export function AdminLoginForm() {
                         </div>
                     </div>
 
-                    {error && (
-                        <div className="text-red-500 text-sm text-center bg-red-500/10 p-2 rounded border border-red-500/20">
-                            {error}
-                        </div>
-                    )}
+
 
                     <div>
                         <Button

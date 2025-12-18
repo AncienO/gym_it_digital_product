@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { UserPlus } from "lucide-react"
 import { createBrowserClient } from '@supabase/ssr'
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 export function AdminSignupForm() {
     const [email, setEmail] = useState("")
@@ -25,6 +26,12 @@ export function AdminSignupForm() {
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (!fullName.trim() || !email.trim() || !password.trim()) {
+            toast.error("Please fill in all fields")
+            return
+        }
+
         setLoading(true)
         setError(null)
 
@@ -46,7 +53,7 @@ export function AdminSignupForm() {
                 // Optional: Redirect after a delay or let them click a link
             }
         } catch (err: any) {
-            setError(err.message)
+            toast.error(err.message)
         } finally {
             setLoading(false)
         }
@@ -104,7 +111,7 @@ export function AdminSignupForm() {
                                 id="full-name"
                                 name="fullName"
                                 type="text"
-                                required
+
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
                                 placeholder="John Doe"
                                 value={fullName}
@@ -118,7 +125,6 @@ export function AdminSignupForm() {
                                 name="email"
                                 type="email"
                                 autoComplete="email"
-                                required
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
                                 placeholder="admin@example.com"
                                 value={email}
@@ -132,7 +138,6 @@ export function AdminSignupForm() {
                                 name="password"
                                 type="password"
                                 autoComplete="new-password"
-                                required
                                 className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500"
                                 placeholder="••••••••"
                                 value={password}
@@ -141,11 +146,7 @@ export function AdminSignupForm() {
                         </div>
                     </div>
 
-                    {error && (
-                        <div className="text-red-500 text-sm text-center bg-red-500/10 p-2 rounded border border-red-500/20">
-                            {error}
-                        </div>
-                    )}
+
 
                     <div>
                         <Button
