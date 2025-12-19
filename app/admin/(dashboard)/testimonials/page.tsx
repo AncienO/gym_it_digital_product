@@ -5,13 +5,14 @@ import Link from "next/link"
 import { deleteTestimonial } from "./actions"
 import { DeleteTestimonialButton } from "./DeleteTestimonialButton"
 import { ToggleApprovalButton } from "./ToggleApprovalButton"
+import { TestimonialReorderButtons } from "./TestimonialReorderButtons"
 
 export default async function AdminTestimonialsPage() {
     const supabase = await createClient()
     const { data: testimonials } = await supabase
         .from("testimonials")
         .select("*")
-        .order("is_approved", { ascending: true }) // Pending first
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false })
 
     return (
@@ -35,6 +36,7 @@ export default async function AdminTestimonialsPage() {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-zinc-900 text-zinc-400 font-medium">
                             <tr>
+                                <th className="px-6 py-4 w-12 text-center">Order</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4">User</th>
                                 <th className="px-6 py-4">Rating</th>
@@ -44,8 +46,15 @@ export default async function AdminTestimonialsPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
-                            {testimonials?.map((testimonial) => (
+                            {testimonials?.map((testimonial, index) => (
                                 <tr key={testimonial.id} className="hover:bg-zinc-900/30 transition-colors">
+                                    <td className="px-6 py-4 text-center">
+                                        <TestimonialReorderButtons
+                                            id={testimonial.id}
+                                            isFirst={index === 0}
+                                            isLast={index === (testimonials.length - 1)}
+                                        />
+                                    </td>
                                     <td className="px-6 py-4">
                                         {testimonial.is_approved ? (
                                             <div className="flex items-center gap-2 text-emerald-500 text-xs font-medium">
@@ -94,7 +103,7 @@ export default async function AdminTestimonialsPage() {
                             ))}
                             {(!testimonials || testimonials.length === 0) && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
+                                    <td colSpan={7} className="px-6 py-12 text-center text-zinc-500">
                                         No testimonials found. Create one to get started.
                                     </td>
                                 </tr>
@@ -106,7 +115,7 @@ export default async function AdminTestimonialsPage() {
 
             {/* Mobile Card View */}
             <div className="md:hidden space-y-4">
-                {testimonials?.map((testimonial) => (
+                {testimonials?.map((testimonial, index) => (
                     <div key={testimonial.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 space-y-4">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
@@ -122,15 +131,22 @@ export default async function AdminTestimonialsPage() {
                                     </div>
                                 </div>
                             </div>
-                            {testimonial.is_approved ? (
-                                <div className="text-emerald-500">
-                                    <CheckCircle2 className="w-5 h-5" />
-                                </div>
-                            ) : (
-                                <div className="text-amber-500">
-                                    <Clock className="w-5 h-5" />
-                                </div>
-                            )}
+                            <div className="flex flex-col items-end gap-2">
+                                {testimonial.is_approved ? (
+                                    <div className="text-emerald-500">
+                                        <CheckCircle2 className="w-5 h-5" />
+                                    </div>
+                                ) : (
+                                    <div className="text-amber-500">
+                                        <Clock className="w-5 h-5" />
+                                    </div>
+                                )}
+                                <TestimonialReorderButtons
+                                    id={testimonial.id}
+                                    isFirst={index === 0}
+                                    isLast={index === (testimonials.length - 1)}
+                                />
+                            </div>
                         </div>
 
                         <p className="text-sm text-zinc-400 line-clamp-3">

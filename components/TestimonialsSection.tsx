@@ -10,6 +10,7 @@ export async function TestimonialsSection() {
         .from("testimonials")
         .select("*")
         .eq("is_approved", true)
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: false })
         .limit(8)
 
