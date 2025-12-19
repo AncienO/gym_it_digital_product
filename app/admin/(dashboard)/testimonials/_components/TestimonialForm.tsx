@@ -11,14 +11,23 @@ import { useRouter } from "next/navigation"
 
 export function TestimonialForm({
     action,
-    defaultValues
+    defaultValues,
+    submitLabel,
+    placeholders,
+    resourceName = "Testimonial"
 }: {
     action: (formData: FormData) => Promise<void>,
     defaultValues?: {
         username?: string
         text?: string
         rating?: number
-    }
+    },
+    submitLabel?: string,
+    placeholders?: {
+        username?: string
+        text?: string
+    },
+    resourceName?: string
 }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -37,15 +46,15 @@ export function TestimonialForm({
         setLoading(true)
         try {
             await action(formData)
-            toast.success("Testimonial saved successfully")
+            toast.success(`${resourceName} saved successfully`)
         } catch (error: any) {
             if (error.message === "NEXT_REDIRECT") {
                 // Redirecting, so it was successful
-                toast.success("Testimonial saved successfully")
+                toast.success(`${resourceName} saved successfully`)
                 return
             }
-            console.error("Error saving testimonial:", error)
-            toast.error("Failed to save testimonial")
+            console.error(`Error saving ${resourceName.toLowerCase()}:`, error)
+            toast.error(`Failed to save ${resourceName.toLowerCase()}`)
         } finally {
             setLoading(false)
         }
@@ -61,7 +70,7 @@ export function TestimonialForm({
                         id="username"
                         name="username"
                         defaultValue={defaultValues?.username}
-                        placeholder="e.g. John Doe"
+                        placeholder={placeholders?.username ?? "e.g. John Doe"}
                         className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 transition-colors h-11"
                     />
                 </div>
@@ -73,7 +82,7 @@ export function TestimonialForm({
                         id="text"
                         name="text"
                         defaultValue={defaultValues?.text}
-                        placeholder="e.g. This program changed my life! The results were immediate."
+                        placeholder={placeholders?.text ?? "e.g. This program changed my life! The results were immediate."}
                         rows={4}
                         className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 transition-colors min-h-[120px] resize-none"
                     />
@@ -123,7 +132,7 @@ export function TestimonialForm({
                             Saving...
                         </>
                     ) : (
-                        "Save Testimonial"
+                        submitLabel || "Save Testimonial"
                     )}
                 </Button>
             </div>

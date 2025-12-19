@@ -19,6 +19,7 @@ export async function createTestimonial(formData: FormData) {
         username,
         text,
         rating,
+        is_approved: true // Admin created ones are auto-approved
     })
 
     if (error) {
@@ -62,6 +63,22 @@ export async function deleteTestimonial(id: string) {
     const supabase = await createClient()
 
     const { error } = await supabase.from("testimonials").delete().eq("id", id)
+
+    if (error) {
+        throw new Error(error.message)
+    }
+
+    revalidatePath("/admin/testimonials")
+    revalidatePath("/")
+    revalidatePath("/cart")
+}
+
+export async function toggleTestimonialApproval(id: string, is_approved: boolean) {
+    const supabase = await createClient()
+
+    const { error } = await supabase.from("testimonials").update({
+        is_approved
+    }).eq("id", id)
 
     if (error) {
         throw new Error(error.message)

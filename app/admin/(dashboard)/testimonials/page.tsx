@@ -1,15 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/server"
-import { Plus, Edit, Trash2, BicepsFlexed } from "lucide-react"
+import { Plus, Edit, Trash2, BicepsFlexed, CheckCircle2, Clock } from "lucide-react"
 import Link from "next/link"
 import { deleteTestimonial } from "./actions"
 import { DeleteTestimonialButton } from "./DeleteTestimonialButton"
+import { ToggleApprovalButton } from "./ToggleApprovalButton"
 
 export default async function AdminTestimonialsPage() {
     const supabase = await createClient()
     const { data: testimonials } = await supabase
         .from("testimonials")
         .select("*")
+        .order("is_approved", { ascending: true }) // Pending first
         .order("created_at", { ascending: false })
 
     return (
@@ -33,6 +35,7 @@ export default async function AdminTestimonialsPage() {
                     <table className="w-full text-left text-sm">
                         <thead className="bg-zinc-900 text-zinc-400 font-medium">
                             <tr>
+                                <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4">User</th>
                                 <th className="px-6 py-4">Rating</th>
                                 <th className="px-6 py-4">Testimonial</th>
@@ -43,6 +46,19 @@ export default async function AdminTestimonialsPage() {
                         <tbody className="divide-y divide-zinc-800">
                             {testimonials?.map((testimonial) => (
                                 <tr key={testimonial.id} className="hover:bg-zinc-900/30 transition-colors">
+                                    <td className="px-6 py-4">
+                                        {testimonial.is_approved ? (
+                                            <div className="flex items-center gap-2 text-emerald-500 text-xs font-medium">
+                                                <CheckCircle2 className="w-4 h-4" />
+                                                Approved
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2 text-amber-500 text-xs font-medium">
+                                                <Clock className="w-4 h-4" />
+                                                Pending
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center text-zinc-400 font-medium flex-shrink-0">
@@ -65,6 +81,7 @@ export default async function AdminTestimonialsPage() {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
+                                            <ToggleApprovalButton id={testimonial.id} isApproved={testimonial.is_approved} />
                                             <Link href={`/admin/testimonials/${testimonial.id}`}>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-800">
                                                     <Edit className="h-4 w-4" />
@@ -77,7 +94,7 @@ export default async function AdminTestimonialsPage() {
                             ))}
                             {(!testimonials || testimonials.length === 0) && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-zinc-500">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
                                         No testimonials found. Create one to get started.
                                     </td>
                                 </tr>
@@ -105,6 +122,15 @@ export default async function AdminTestimonialsPage() {
                                     </div>
                                 </div>
                             </div>
+                            {testimonial.is_approved ? (
+                                <div className="text-emerald-500">
+                                    <CheckCircle2 className="w-5 h-5" />
+                                </div>
+                            ) : (
+                                <div className="text-amber-500">
+                                    <Clock className="w-5 h-5" />
+                                </div>
+                            )}
                         </div>
 
                         <p className="text-sm text-zinc-400 line-clamp-3">
@@ -116,10 +142,10 @@ export default async function AdminTestimonialsPage() {
                                 {new Date(testimonial.created_at).toLocaleDateString()}
                             </span>
                             <div className="flex items-center gap-2">
+                                <ToggleApprovalButton id={testimonial.id} isApproved={testimonial.is_approved} />
                                 <Link href={`/admin/testimonials/${testimonial.id}`}>
-                                    <Button variant="outline" size="sm" className="h-8 border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800">
-                                        <Edit className="h-4 w-4 mr-2" />
-                                        Edit
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-800">
+                                        <Edit className="h-4 w-4" />
                                     </Button>
                                 </Link>
                                 <DeleteTestimonialButton id={testimonial.id} username={testimonial.username} />
@@ -137,3 +163,4 @@ export default async function AdminTestimonialsPage() {
         </div>
     )
 }
+

@@ -9,6 +9,7 @@ export async function TestimonialsSection() {
     const { data: testimonials } = await supabase
         .from("testimonials")
         .select("*")
+        .eq("is_approved", true)
         .order("created_at", { ascending: false })
         .limit(8)
 
