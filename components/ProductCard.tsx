@@ -43,54 +43,55 @@ export function ProductCard({ product }: ProductCardProps) {
                     </div>
                 )}
             </div>
-            <CardHeader>
+            <CardHeader className="p-4 pb-2">
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <CardTitle className="text-xl font-bold text-white line-clamp-1 cursor-help">{product.name}</CardTitle>
+                        <CardTitle className="text-lg font-bold text-white line-clamp-1 cursor-help">{product.name}</CardTitle>
                     </TooltipTrigger>
                     <TooltipContent
                         side="top"
-                        className="max-w-sm bg-zinc-800 text-zinc-100 border border-zinc-700 p-3"
+                        className="max-w-sm bg-zinc-800 text-zinc-100 border border-zinc-700 p-2 text-xs"
                         sideOffset={5}
                     >
                         <p className="font-bold">{product.name}</p>
                     </TooltipContent>
                 </Tooltip>
             </CardHeader>
-            <CardContent className="flex flex-col flex-1">
+            <CardContent className="flex flex-col flex-1 p-4 pt-0">
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <p className="text-zinc-400 line-clamp-3 text-sm whitespace-pre-wrap cursor-help mb-4">{product.description}</p>
+                        <p className="text-zinc-400 line-clamp-2 text-xs whitespace-pre-wrap cursor-help mb-3">{product.description}</p>
                     </TooltipTrigger>
                     <TooltipContent
                         side="top"
-                        className="max-w-sm bg-zinc-800 text-zinc-100 border border-zinc-700 p-3"
+                        className="max-w-sm bg-zinc-800 text-zinc-100 border border-zinc-700 p-2"
                         sideOffset={5}
                     >
-                        <p className="text-sm whitespace-pre-wrap">{product.description}</p>
+                        <p className="text-xs whitespace-pre-wrap">{product.description}</p>
                     </TooltipContent>
                 </Tooltip>
                 <div className="flex items-center justify-between mt-auto pt-2">
-                    <div className="text-2xl font-bold text-emerald-400">
+                    <div className="text-lg font-bold text-emerald-400">
                         GHS {product.price.toFixed(2)}
                     </div>
                     {product.duration && (
-                        <div className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-300 font-medium">
+                        <div className="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-[10px] text-zinc-300 font-medium">
                             {product.duration}
                         </div>
                     )}
                 </div>
             </CardContent>
-            <CardFooter className="mt-auto">
+            <CardFooter className="mt-auto p-4 pt-0">
                 <Button
-                    className={`w-full font-semibold transition-all duration-300 ${isInCart ? 'bg-zinc-700 hover:bg-zinc-700 text-zinc-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    size="sm"
+                    className={`w-full font-semibold transition-all duration-300 h-9 text-sm ${isInCart ? 'bg-zinc-700 hover:bg-zinc-700 text-zinc-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                         }`}
                     onClick={handleAddToCart}
                     disabled={isInCart}
                 >
                     {isInCart ? (
                         <>
-                            <Check className="mr-2 h-4 w-4" /> Added
+                            <Check className="mr-2 h-3 w-3" /> Added
                         </>
                     ) : (
                         "Add to Cart"

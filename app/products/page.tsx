@@ -22,10 +22,12 @@ export default async function ProductsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {products?.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                        <div key={product.id} className="w-full max-w-[340px] mx-auto">
+                            <ProductCard product={product} />
+                        </div>
                     ))}
                     {(!products || products.length === 0) && (
-                        <p className="text-zinc-500 col-span-3 text-center">No products available yet.</p>
+                        <p className="text-zinc-500 col-span-full text-center">No products available yet.</p>
                     )}
                 </div>
             </div>
