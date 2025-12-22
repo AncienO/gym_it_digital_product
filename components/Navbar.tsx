@@ -10,7 +10,7 @@ export function Navbar() {
     const itemCount = items.length
 
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-black/50 backdrop-blur-xl">
+        <nav className="w-full border-b border-zinc-800 bg-black/50 backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
                     gym<span className="text-emerald-500">-it</span>

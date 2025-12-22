@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { LayoutDashboard, Package, LogOut, Menu, X, MessageSquare } from "lucide-react"
+import { LayoutDashboard, Package, LogOut, Menu, X, MessageSquare, Megaphone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function MobileNav() {
@@ -43,6 +43,12 @@ export function MobileNav() {
                             <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
                                 <MessageSquare className="mr-2 h-4 w-4" />
                                 Testimonials
+                            </Button>
+                        </Link>
+                        <Link href="/admin/notices" onClick={() => setIsOpen(false)}>
+                            <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
+                                <Megaphone className="mr-2 h-4 w-4" />
+                                Notices
                             </Button>
                         </Link>
                     </nav>

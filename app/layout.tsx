@@ -5,6 +5,8 @@ import { ConditionalNavbar } from "@/components/ConditionalNavbar";
 import { CartProvider } from "@/context/CartContext";
 import { ToastProvider } from "@/components/ToastProvider";
 import { Footer } from "@/components/Footer";
+import { createClient } from "@/lib/supabase/server";
+import { ConditionalNotice } from "@/components/ConditionalNotice";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,11 +15,22 @@ export const metadata: Metadata = {
   description: "Premium digital fitness products for your journey.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+
+  // Fetch the most recent active notice
+  const { data: notice } = await supabase
+    .from('notices')
+    .select('content')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
@@ -27,7 +40,10 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen bg-black text-white antialiased flex flex-col`}>
         <ToastProvider />
         <CartProvider>
-          <ConditionalNavbar />
+          <div className="sticky top-0 z-50 w-full">
+            <ConditionalNavbar />
+            <ConditionalNotice notice={notice} />
+          </div>
           <main className="flex-1">
             {children}
           </main>

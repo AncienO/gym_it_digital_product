@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Database } from "@/types"
 import { useCart } from "@/context/CartContext"
-import { Check } from "lucide-react"
+import { Check, Info } from "lucide-react"
 import { useState } from "react"
 
 type Product = Database['public']['Tables']['products']['Row']
@@ -18,6 +18,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
     const { addItem, items } = useCart()
     const [isAdded, setIsAdded] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false)
 
     const isInCart = items.some(item => item.id === product.id)
 
@@ -29,19 +30,34 @@ export function ProductCard({ product }: ProductCardProps) {
 
     return (
         <Card className="overflow-hidden border border-zinc-800 hover:border-zinc-700 shadow-lg bg-zinc-900/50 backdrop-blur-sm hover:bg-zinc-900/80 transition-all duration-300 group h-full flex flex-col">
-            <div className="aspect-square relative overflow-hidden bg-zinc-800 shrink-0">
-                {/* Placeholder for image if null */}
+            <div
+                className="aspect-square relative overflow-hidden bg-zinc-800 shrink-0 cursor-pointer group/image"
+                onClick={() => setIsExpanded(!isExpanded)}
+            >
+                {/* Image */}
                 {product.image_url ? (
                     <img
                         src={product.image_url}
                         alt={product.name}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                        className={`object-cover w-full h-full transition-transform duration-500 ${isExpanded ? 'scale-110 blur-sm' : 'group-hover/image:scale-105'}`}
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-500">
                         No Image
                     </div>
                 )}
+
+                {/* Mobile/Tap Interaction Hint */}
+                <div className={`absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full backdrop-blur-md transition-opacity duration-300 ${isExpanded ? 'opacity-0' : 'opacity-100'}`}>
+                    <Info className="w-4 h-4" />
+                </div>
+
+                {/* Description Overlay */}
+                <div className={`absolute inset-0 bg-black/60 backdrop-blur-[2px] p-6 flex items-center justify-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                    <p className="text-white text-sm text-center font-medium leading-relaxed overflow-y-auto max-h-full scrollbar-hide">
+                        {product.description}
+                    </p>
+                </div>
             </div>
             <CardHeader className="p-4 pb-2">
                 <Tooltip>
