@@ -48,12 +48,12 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
 
                 {/* Mobile/Tap Interaction Hint */}
-                <div className={`absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full backdrop-blur-md transition-opacity duration-300 ${isExpanded ? 'opacity-0' : 'opacity-100'}`}>
+                <div className={`absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full backdrop-blur-md transition-opacity duration-300 z-20 ${isExpanded ? 'opacity-0' : 'opacity-100'}`}>
                     <Info className="w-4 h-4" />
                 </div>
 
                 {/* Description Overlay */}
-                <div className={`absolute inset-0 bg-black/60 backdrop-blur-[2px] p-6 flex items-center justify-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                <div className={`absolute inset-0 bg-black/80 backdrop-blur-sm p-6 flex items-center justify-center transition-opacity duration-300 z-30 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                     <p className="text-white text-sm text-center font-medium leading-relaxed overflow-y-auto max-h-full scrollbar-hide">
                         {product.description}
                     </p>

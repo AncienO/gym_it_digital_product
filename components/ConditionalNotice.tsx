@@ -29,7 +29,7 @@ export function ConditionalNotice({ notice }: ConditionalNoticeProps) {
     return (
         <div className="bg-indigo-600 text-white relative border-t border-indigo-700/50">
             <div className="container mx-auto px-4 py-3 md:py-2">
-                <p className="text-sm font-medium text-left md:text-center whitespace-normal break-words w-full">
+                <p className="text-sm font-medium text-center whitespace-normal break-words w-full">
                     {notice.content}
                 </p>
             </div>
