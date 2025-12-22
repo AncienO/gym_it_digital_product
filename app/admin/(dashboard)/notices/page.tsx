@@ -24,15 +24,15 @@ export default async function NoticesPage() {
             {/* Create New Notice Section */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                 <h3 className="text-lg font-medium text-white mb-4">Post New Notice</h3>
-                <form action={createNotice} className="flex gap-4">
+                <form action={createNotice} className="flex flex-col md:flex-row gap-4">
                     <input
                         name="content"
                         type="text"
                         placeholder="Enter notice content..."
-                        className="flex-1 bg-black/20 border border-white/10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
+                        className="flex-1 bg-black/20 border border-white/10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white min-w-0"
                         required
                     />
-                    <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white w-full md:w-auto shrink-0">
                         <Plus className="w-4 h-4 mr-2" />
                         Create Notice
                     </Button>
