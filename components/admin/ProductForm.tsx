@@ -143,9 +143,19 @@ export function ProductForm({ product }: ProductFormProps) {
                 if (error) throw error
             } else {
                 // Create
+                // Get the current max sort_order
+                const { data: maxProduct } = await supabase
+                    .from('products')
+                    .select('sort_order')
+                    .order('sort_order', { ascending: false })
+                    .limit(1)
+                    .maybeSingle()
+
+                const nextSortOrder = (maxProduct?.sort_order ?? 0) + 1
+
                 const { error } = await supabase
                     .from('products')
-                    .insert(productData)
+                    .insert({ ...productData, sort_order: nextSortOrder })
 
                 if (error) throw error
             }
