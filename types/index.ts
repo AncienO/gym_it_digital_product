@@ -18,6 +18,7 @@ export interface Database {
                     duration: string | null
                     duration_weeks: number | null
                     image_url: string | null
+                    preview_url: string | null
                     file_url: string
                     is_active: boolean
                     created_at: string
@@ -30,6 +31,7 @@ export interface Database {
                     duration?: string | null
                     duration_weeks?: number | null
                     image_url?: string | null
+                    preview_url?: string | null
                     file_url: string
                     is_active?: boolean
                     created_at?: string
@@ -42,6 +44,7 @@ export interface Database {
                     duration?: string | null
                     duration_weeks?: number | null
                     image_url?: string | null
+                    preview_url?: string | null
                     file_url?: string
                     is_active?: boolean
                     created_at?: string

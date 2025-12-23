@@ -66,8 +66,10 @@ export function ProductForm({ product }: ProductFormProps) {
     const [duration, setDuration] = useState(product?.duration || "")
     const [isActive, setIsActive] = useState(product?.is_active ?? true)
     const [imageFile, setImageFile] = useState<File | null>(null)
+    const [previewFile, setPreviewFile] = useState<File | null>(null)
     const [productFile, setProductFile] = useState<File | null>(null)
     const [currentImageUrl, setCurrentImageUrl] = useState(product?.image_url || "")
+    const [currentPreviewUrl, setCurrentPreviewUrl] = useState(product?.preview_url || "")
     const [currentFileUrl, setCurrentFileUrl] = useState(product?.file_url || "")
 
     const supabase = createBrowserClient(
@@ -110,11 +112,17 @@ export function ProductForm({ product }: ProductFormProps) {
 
         try {
             let imageUrl = currentImageUrl
+            let previewUrl = currentPreviewUrl
             let fileUrl = currentFileUrl
 
             // Upload Image
             if (imageFile) {
                 imageUrl = await handleUpload(imageFile, 'product-images')
+            }
+
+            // Upload Preview
+            if (previewFile) {
+                previewUrl = await handleUpload(previewFile, 'product-images')
             }
 
             // Upload Product File
@@ -130,6 +138,7 @@ export function ProductForm({ product }: ProductFormProps) {
                 duration,
                 is_active: isActive,
                 image_url: imageUrl,
+                preview_url: previewUrl,
                 file_url: fileUrl,
             }
 
@@ -278,73 +287,113 @@ export function ProductForm({ product }: ProductFormProps) {
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                         />
                                     </div>
-                                    <p className="text-xs text-zinc-500 mt-2 text-center">Rec: 16:9 or 4:3</p>
                                 </div>
+                                <p className="text-xs text-zinc-500 mt-2 text-center">Rec: 16:9 or 4:3</p>
                             </div>
+                        </div>
 
-                            {/* Product File */}
-                            <div className="space-y-3">
-                                <Label className="text-zinc-300">Product File</Label>
-                                <div className="relative group">
-                                    <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700">
-                                        {productFile ? (
-                                            <div className="text-center p-4">
-                                                <div className="h-8 w-8 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                    <Upload className="h-4 w-4" />
-                                                </div>
-                                                <span className="text-xs text-emerald-500 block font-medium truncate max-w-[150px]">{productFile.name}</span>
-                                            </div>
-                                        ) : currentFileUrl ? (
-                                            <div className="text-center p-4">
-                                                <div className="h-8 w-8 bg-zinc-800 text-zinc-400 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                    <Upload className="h-4 w-4" />
-                                                </div>
-                                                <span className="text-xs text-zinc-400 block font-medium truncate max-w-[150px]">Current: {currentFileUrl.split('/').pop()}</span>
-                                            </div>
-                                        ) : (
-                                            <div className="text-center p-4">
-                                                <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
-                                                <span className="text-xs text-zinc-500 block">Upload File</span>
-                                            </div>
-                                        )}
-                                        <Input
-                                            type="file"
-                                            onChange={(e) => setProductFile(e.target.files?.[0] || null)}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        {/* Preview Image */}
+                        <div className="space-y-3">
+                            <Label className="text-zinc-300">Preview Image (Look Inside)</Label>
+                            <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700 relative">
+                                {previewFile || currentPreviewUrl ? (
+                                    <>
+                                        <img
+                                            src={previewFile ? URL.createObjectURL(previewFile) : currentPreviewUrl}
+                                            alt="Preview"
+                                            className="h-full w-full object-cover"
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                setPreviewFile(null)
+                                                setCurrentPreviewUrl("")
+                                            }}
+                                            className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-red-500/80 transition-colors z-20"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                ) : (
+                                    <div className="text-center p-4">
+                                        <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
+                                        <span className="text-xs text-zinc-500 block">Upload Preview</span>
                                     </div>
-                                    <p className="text-xs text-zinc-500 mt-2 text-center">PDF, ZIP, etc.</p>
-                                </div>
+                                )}
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setPreviewFile(e.target.files?.[0] || null)}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
                             </div>
+                            <p className="text-xs text-zinc-500 mt-2 text-center">Optional</p>
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="grid grid-cols-2 gap-4 pt-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => router.back()}
-                            className="bg-transparent border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 h-12"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={loading}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white h-12 font-medium"
-                        >
-                            {loading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Saving...
-                                </>
-                            ) : (
-                                "Save Product"
-                            )}
-                        </Button>
+                    {/* Product File */}
+                    <div className="space-y-3">
+                        <Label className="text-zinc-300">Product File</Label>
+                        <div className="relative group">
+                            <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700">
+                                {productFile ? (
+                                    <div className="text-center p-4">
+                                        <div className="h-8 w-8 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <Upload className="h-4 w-4" />
+                                        </div>
+                                        <span className="text-xs text-emerald-500 block font-medium truncate max-w-[150px]">{productFile.name}</span>
+                                    </div>
+                                ) : currentFileUrl ? (
+                                    <div className="text-center p-4">
+                                        <div className="h-8 w-8 bg-zinc-800 text-zinc-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <Upload className="h-4 w-4" />
+                                        </div>
+                                        <span className="text-xs text-zinc-400 block font-medium truncate max-w-[150px]">Current: {currentFileUrl.split('/').pop()}</span>
+                                    </div>
+                                ) : (
+                                    <div className="text-center p-4">
+                                        <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
+                                        <span className="text-xs text-zinc-500 block">Upload File</span>
+                                    </div>
+                                )}
+                                <Input
+                                    type="file"
+                                    onChange={(e) => setProductFile(e.target.files?.[0] || null)}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                            </div>
+                            <p className="text-xs text-zinc-500 mt-2 text-center">PDF, ZIP, etc.</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-4 pt-4">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.back()}
+                    className="bg-transparent border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800 h-12"
+                >
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white h-12 font-medium"
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                        </>
+                    ) : (
+                        "Save Product"
+                    )}
+                </Button>
             </div>
         </form>
     )
