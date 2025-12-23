@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Dumbbell, Zap, Trophy, Weight, Wand } from "lucide-react"
+import { ArrowRight, Dumbbell, Zap, Trophy, Weight, Wand, BicepsFlexed } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
 import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { createClient } from "@/lib/supabase/server"
@@ -20,11 +20,10 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent z-10" />
-          <img
-            src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=2070&auto=format&fit=crop"
-            alt="Gym background"
-            className="w-full h-full object-cover opacity-50"
+
+          <BicepsFlexed
+            className="absolute -right-30 bottom-0 md:-bottom-32 md:-right-32 w-[600px] h-[600px] md:w-[1200px] md:h-[1200px] text-emerald-600 opacity-30 -rotate-12"
+            strokeWidth={1}
           />
         </div>
 
