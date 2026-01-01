@@ -8,6 +8,8 @@ import { Footer } from "@/components/Footer";
 import { createClient } from "@/lib/supabase/server";
 import { ConditionalNotice } from "@/components/ConditionalNotice";
 
+import { CurrencyProvider } from "@/context/CurrencyContext";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -39,16 +41,18 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen bg-black text-white antialiased flex flex-col`}>
         <ToastProvider />
-        <CartProvider>
-          <div className="sticky top-0 z-50 w-full">
-            <ConditionalNavbar />
-            <ConditionalNotice notice={notice} />
-          </div>
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </CartProvider>
+        <CurrencyProvider>
+          <CartProvider>
+            <div className="sticky top-0 z-50 w-full">
+              <ConditionalNavbar />
+              <ConditionalNotice notice={notice} />
+            </div>
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

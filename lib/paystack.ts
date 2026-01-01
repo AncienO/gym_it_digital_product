@@ -30,12 +30,12 @@ interface PaystackVerifyResponse {
     }
 }
 
-export async function initializePaystackPayment(email: string, amount: number, callbackUrl: string, metadata?: any) {
+export async function initializePaystackPayment(email: string, amount: number, callbackUrl: string, metadata?: any, currency: string = 'GHS') {
     if (!PAYSTACK_SECRET_KEY) {
         throw new Error('PAYSTACK_SECRET_KEY is not defined')
     }
 
-    // Paystack expects amount in kobo (multiply by 100)
+    // Paystack expects amount in kobo/cents (multiply by 100)
     const amountInKobo = Math.round(amount * 100)
 
     const response = await fetch(`${PAYSTACK_API_URL}/transaction/initialize`, {
@@ -49,7 +49,7 @@ export async function initializePaystackPayment(email: string, amount: number, c
             amount: amountInKobo,
             callback_url: callbackUrl,
             metadata,
-            currency: 'GHS', // Assuming GHS for this project
+            currency: currency,
             channels: ['card', 'mobile_money'],
         }),
         signal: AbortSignal.timeout(20000), // 20s timeout

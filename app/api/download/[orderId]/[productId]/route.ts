@@ -45,19 +45,65 @@ export async function GET(
         }
 
         // 2. Fetch the original file from Supabase Storage
-        // Extract path from URL or use the stored path directly if that's what you have
-        // Assuming file_url is a public URL, we can fetch it. 
-        // Ideally, we should use supabase.storage.download() if it's a private bucket path.
+        let fileBuffer: ArrayBuffer | null = null;
+        let contentType: string | null = null;
 
-        // Let's try to fetch the file content
+        console.log(`⬇️ Attempting to download file from: ${fileUrl}`)
+
+        // Try standard fetch first (works for public URLs)
         const fileResponse = await fetch(fileUrl)
-        if (!fileResponse.ok) {
-            return NextResponse.json({ error: 'Failed to fetch source file' }, { status: 500 })
+
+        if (fileResponse.ok) {
+            fileBuffer = await fileResponse.arrayBuffer()
+            contentType = fileResponse.headers.get('content-type')
+        } else {
+            console.warn(`⚠️ Direct fetch failed (${fileResponse.status}), trying Supabase Storage download...`)
+
+            // Fallback: Try to download via Admin Client (works for private buckets)
+            // We need to extract the bucket and path from the URL
+            // Format: .../storage/v1/object/public/[bucket]/[path]
+            try {
+                const urlObj = new URL(fileUrl)
+                const pathParts = urlObj.pathname.split('/')
+                // find index of 'public' or 'sign' (if signed url) to locate bucket
+                // usually: /storage/v1/object/public/product-files/filename.pdf
+
+                // This is a naive parser, assuming standard Supabase URL structure
+                // We know we used 'product-files' bucket in ProductForm
+                const bucketName = 'product-files'
+                const pathIndex = pathParts.indexOf(bucketName)
+
+                if (pathIndex !== -1) {
+                    const filePath = pathParts.slice(pathIndex + 1).join('/')
+                    const { data, error: downloadError } = await supabase.storage
+                        .from(bucketName)
+                        .download(filePath)
+
+                    if (downloadError) {
+                        throw downloadError
+                    }
+
+                    if (data) {
+                        fileBuffer = await data.arrayBuffer()
+                        contentType = data.type
+                        console.log('✅ Successfully downloaded via Storage API')
+                    }
+                } else {
+                    // Try just the last part if we can't find bucket
+                    // Or if URL is totally different
+                    console.log('Could not parse bucket from URL, skipping storage download')
+                }
+            } catch (err) {
+                console.error('❌ Storage download fallback failed:', err)
+            }
         }
-        const fileBuffer = await fileResponse.arrayBuffer()
+
+        if (!fileBuffer) {
+            return NextResponse.json({ error: 'Failed to access product file. Please contact support.' }, { status: 500 })
+        }
 
         // 3. Check if it's a PDF
-        const contentType = fileResponse.headers.get('content-type')
+        // content-type might be missing or wrong, check extension too
         if (!contentType?.includes('pdf') && !fileUrl.toLowerCase().endsWith('.pdf')) {
             // If not PDF, just return the file as is (can't watermark)
             return new NextResponse(fileBuffer, {

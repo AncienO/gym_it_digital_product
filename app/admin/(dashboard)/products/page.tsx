@@ -36,7 +36,8 @@ export default async function AdminProductsPage() {
                             <tr>
                                 <th className="px-6 py-4 w-12 text-center">Order</th>
                                 <th className="px-6 py-4">Name</th>
-                                <th className="px-6 py-4">Price</th>
+                                <th className="px-6 py-4">Price (GHS)</th>
+                                <th className="px-6 py-4">Price (USD)</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4">Created</th>
                                 <th className="px-6 py-4 text-right">Actions</th>
@@ -63,6 +64,9 @@ export default async function AdminProductsPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-zinc-300">GHS {product.price.toFixed(2)}</td>
+                                    <td className="px-6 py-4 text-zinc-300">
+                                        {product.price_usd ? `$${product.price_usd.toFixed(2)}` : <span className="text-zinc-600">—</span>}
+                                    </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.is_active
                                             ? 'bg-emerald-500/10 text-emerald-500'
@@ -88,7 +92,7 @@ export default async function AdminProductsPage() {
                             ))}
                             {(!products || products.length === 0) && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
+                                    <td colSpan={7} className="px-6 py-12 text-center text-zinc-500">
                                         No products found. Create one to get started.
                                     </td>
                                 </tr>
@@ -111,7 +115,15 @@ export default async function AdminProductsPage() {
                                 </div>
                                 <div>
                                     <h3 className="font-medium text-white">{product.name}</h3>
-                                    <p className="text-sm text-zinc-400">GHS {product.price.toFixed(2)}</p>
+                                    <div className="flex items-center gap-3 text-sm text-zinc-400">
+                                        <span>GHS {product.price.toFixed(2)}</span>
+                                        {product.price_usd && (
+                                            <>
+                                                <span className="text-zinc-700">•</span>
+                                                <span>${product.price_usd.toFixed(2)}</span>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end gap-2">

@@ -1,10 +1,19 @@
 import { NextResponse } from 'next/server'
 import { initializePaystackPayment } from '@/lib/paystack'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getPaystackAmount } from '@/lib/currency'
 
 export async function POST(request: Request) {
     try {
-        const { amount, phoneNumber, email, items, provider = 'paystack' } = await request.json()
+        const { amount, phoneNumber, email, items, provider = 'paystack', currency = 'GHS' } = await request.json()
+
+        // Convert USD to GHS if needed (Paystack Ghana only supports GHS settlement)
+        // We store the original currency for display, but charge in GHS
+        const displayAmount = amount
+        const displayCurrency = currency
+        const chargeAmount = getPaystackAmount(amount, currency as 'GHS' | 'USD')
+
+        console.log(`💰 Payment: Display ${displayCurrency} ${displayAmount}, Charging GHS ${chargeAmount}`)
 
         // 1. Create Order in Supabase using admin client
         const supabase = createAdminClient()
@@ -15,11 +24,12 @@ export async function POST(request: Request) {
         const { data: order, error: orderError } = await supabase
             .from('orders')
             .insert({
-                total_amount: amount,
+                total_amount: chargeAmount, // Always GHS amount charged
                 customer_email: email,
                 customer_phone: phoneNumber,
                 status: 'pending',
-                payment_provider: provider
+                payment_provider: provider,
+                currency: displayCurrency // Store what currency customer selected/saw
             })
             .select()
             .single()
@@ -54,7 +64,7 @@ export async function POST(request: Request) {
 
         // Paystack Payment Flow - Use production URL if available
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
-            (process.env.NODE_ENV === 'production' ? 'https://gym-it.onrender.com' : 'http://localhost:3000')
+            (process.env.NODE_ENV === 'production' ? 'https://gymit.fitness' : 'http://localhost:3000')
         const callbackUrl = `${baseUrl}/checkout/success?orderId=${orderId}`
 
         console.log('💳 Payment callback URL:', callbackUrl)
@@ -67,7 +77,8 @@ export async function POST(request: Request) {
             // But typically we return an auth URL. Let's return a mock success URL for now if no keys.
             authorizationUrl = `${callbackUrl}&reference=${referenceId}`
         } else {
-            const paystackResponse = await initializePaystackPayment(email, amount, callbackUrl, { orderId })
+            // Always pass GHS to Paystack (required for Ghana merchants)
+            const paystackResponse = await initializePaystackPayment(email, chargeAmount, callbackUrl, { orderId, displayCurrency, displayAmount }, 'GHS')
             referenceId = paystackResponse.data.reference
             authorizationUrl = paystackResponse.data.authorization_url
         }

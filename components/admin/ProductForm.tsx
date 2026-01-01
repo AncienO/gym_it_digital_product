@@ -63,6 +63,7 @@ export function ProductForm({ product }: ProductFormProps) {
     const [name, setName] = useState(product?.name || "")
     const [description, setDescription] = useState(product?.description || "")
     const [price, setPrice] = useState(product?.price?.toString() || "")
+    const [priceUsd, setPriceUsd] = useState(product?.price_usd?.toString() || "")
     const [duration, setDuration] = useState(product?.duration || "")
     const [isActive, setIsActive] = useState(product?.is_active ?? true)
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -135,6 +136,7 @@ export function ProductForm({ product }: ProductFormProps) {
                 name,
                 description,
                 price: parseFloat(price),
+                price_usd: priceUsd ? parseFloat(priceUsd) : null,
                 duration,
                 is_active: isActive,
                 image_url: imageUrl,
@@ -222,6 +224,22 @@ export function ProductForm({ product }: ProductFormProps) {
                                         value={price}
                                         onChange={(e) => setPrice(e.target.value)}
                                         className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 pl-12 h-11"
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="price_usd" className="text-zinc-300">Price (USD)</Label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">$</span>
+                                    <Input
+                                        id="price_usd"
+                                        type="number"
+                                        step="0.01"
+                                        value={priceUsd}
+                                        onChange={(e) => setPriceUsd(e.target.value)}
+                                        className="bg-zinc-950 border-zinc-800 text-white focus:border-emerald-500 pl-8 h-11"
                                         placeholder="0.00"
                                     />
                                 </div>

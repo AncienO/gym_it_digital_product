@@ -15,6 +15,7 @@ export interface Database {
                     name: string
                     description: string | null
                     price: number
+                    price_usd: number | null
                     duration: string | null
                     duration_weeks: number | null
                     image_url: string | null
@@ -28,6 +29,7 @@ export interface Database {
                     name: string
                     description?: string | null
                     price: number
+                    price_usd?: number | null
                     duration?: string | null
                     duration_weeks?: number | null
                     image_url?: string | null
@@ -41,6 +43,7 @@ export interface Database {
                     name?: string
                     description?: string | null
                     price?: number
+                    price_usd?: number | null
                     duration?: string | null
                     duration_weeks?: number | null
                     image_url?: string | null
@@ -57,6 +60,7 @@ export interface Database {
                     customer_email: string
                     customer_phone: string | null
                     total_amount: number
+                    currency: string
                     status: 'pending' | 'paid' | 'failed' | 'cancelled'
                     payment_provider: string | null
                     payment_reference: string | null
@@ -68,6 +72,7 @@ export interface Database {
                     customer_email: string
                     customer_phone?: string | null
                     total_amount: number
+                    currency?: string
                     status?: 'pending' | 'paid' | 'failed' | 'cancelled'
                     payment_provider?: string | null
                     payment_reference?: string | null
@@ -79,6 +84,7 @@ export interface Database {
                     customer_email?: string
                     customer_phone?: string | null
                     total_amount?: number
+                    currency?: string
                     status?: 'pending' | 'paid' | 'failed' | 'cancelled'
                     payment_provider?: string | null
                     payment_reference?: string | null

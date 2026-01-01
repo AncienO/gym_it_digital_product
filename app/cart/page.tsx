@@ -1,6 +1,8 @@
 "use client"
 
 import { useCart } from "@/context/CartContext"
+import { useCurrency } from "@/context/CurrencyContext"
+import { getPaystackAmount } from "@/lib/currency"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,9 +14,16 @@ import toast from "react-hot-toast"
 
 export default function CartPage() {
     const { items, removeItem, total, clearCart } = useCart()
+    const { currency, formatPrice } = useCurrency()
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [isProcessing, setIsProcessing] = useState(false)
+
+    // Calculate total based on currency
+    const cartTotal = items.reduce((sum, item) => {
+        const price = currency === 'USD' && item.price_usd ? item.price_usd : item.price
+        return sum + price
+    }, 0)
 
     const handleCheckout = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -27,11 +36,12 @@ export default function CartPage() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    amount: total,
+                    amount: cartTotal,
                     phoneNumber: phone,
                     email: email,
                     items: items,
-                    provider: 'paystack'
+                    provider: 'paystack',
+                    currency: currency
                 }),
             })
 
@@ -70,8 +80,8 @@ export default function CartPage() {
                 const handler = window.PaystackPop.setup({
                     key: publicKey,
                     email: email,
-                    amount: Math.round(total * 100), // Convert to pesewas for GHS
-                    currency: 'GHS', // Ghana Cedis
+                    amount: Math.round(getPaystackAmount(cartTotal, currency) * 100), // Always convert to GHS for Paystack
+                    currency: 'GHS', // Ghana merchants must use GHS
                     ref: data.referenceId,
                     metadata: {
                         phone_number: phone, // Store for backend reference
@@ -168,7 +178,12 @@ export default function CartPage() {
                                             </div>
                                             <div>
                                                 <h3 className="font-medium text-white">{item.name}</h3>
-                                                <p className="text-sm text-zinc-400">GHS {item.price.toFixed(2)}</p>
+                                                <p className="text-sm text-zinc-400">
+                                                    {currency === 'USD' && item.price_usd
+                                                        ? formatPrice(item.price_usd)
+                                                        : formatPrice(item.price)
+                                                    }
+                                                </p>
                                             </div>
                                         </div>
                                         <Button
@@ -184,7 +199,7 @@ export default function CartPage() {
                             </div>
                             <div className="mt-6 pt-6 border-t border-zinc-800 flex justify-between items-center">
                                 <span className="text-zinc-400">Total</span>
-                                <span className="text-2xl font-bold text-emerald-400">GHS {total.toFixed(2)}</span>
+                                <span className="text-2xl font-bold text-emerald-400">{formatPrice(cartTotal)}</span>
                             </div>
                         </div>
                     </div>
@@ -260,7 +275,7 @@ export default function CartPage() {
                                                 Processing Payment...
                                             </span>
                                         ) : (
-                                            `Pay GHS ${total.toFixed(2)}`
+                                            `Pay ${formatPrice(cartTotal)}`
                                         )}
                                     </Button>
                                     <div className="flex items-center justify-center gap-2 mt-4 text-xs text-zinc-500">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Database } from "@/types"
 import { useCart } from "@/context/CartContext"
+import { useCurrency } from "@/context/CurrencyContext"
 import { Check, Info, Eye, X } from "lucide-react"
 import { useState } from "react"
 
@@ -17,6 +18,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     const { addItem, items } = useCart()
+    const { currency, formatPrice } = useCurrency()
     const [isAdded, setIsAdded] = useState(false)
     const [isExpanded, setIsExpanded] = useState(false)
     const [showPreview, setShowPreview] = useState(false)
@@ -104,7 +106,10 @@ export function ProductCard({ product }: ProductCardProps) {
                     </Tooltip>
                     <div className="flex items-center justify-between mt-auto pt-2">
                         <div className="text-lg font-bold text-emerald-400">
-                            GHS {product.price.toFixed(2)}
+                            {currency === 'USD' && product.price_usd
+                                ? formatPrice(product.price_usd)
+                                : formatPrice(product.price)
+                            }
                         </div>
                         {product.duration && (
                             <div className="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-[10px] text-zinc-300 font-medium">

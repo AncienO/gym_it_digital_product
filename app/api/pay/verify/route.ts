@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { verifyPaystackPayment } from '@/lib/paystack'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendDownloadEmail } from '@/lib/email'
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
@@ -131,9 +132,49 @@ export async function GET(request: Request) {
                         }
                     }
 
-                    // 4. Email sending is now handled by the Webhook to prevent duplicates
-                    // If we kept it here, the user would get two emails.
-                    console.log('📧 Skipping email in verify route, handled by webhook')
+                    // 4. Send Confirmation Email
+                    // console.log('📧 Preparing to send confirmation email...')
+
+                    // Check environment variables
+                    const gmailUser = process.env.GMAIL_USER
+                    const gmailPass = process.env.GMAIL_APP_PASSWORD
+
+                    if (!gmailUser || !gmailPass) {
+                        console.error('❌ EMAIL ERROR: Missing environment variables')
+                        console.error('GMAIL_USER:', gmailUser ? 'SET' : 'MISSING')
+                        console.error('GMAIL_APP_PASSWORD:', gmailPass ? 'SET' : 'MISSING')
+                    } else {
+                        console.log('✅ Email credentials found')
+
+                        const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
+                            (process.env.NODE_ENV === 'production' ? 'https://gymit.fitness' : 'http://localhost:3000')
+
+                        console.log('🌐 Using base URL:', baseUrl)
+
+                        const emailProducts = orderItems.map((item: any) => ({
+                            name: item.products.name,
+                            downloadUrl: `${baseUrl}/api/download/${order.id}/${item.product_id}`
+                        }))
+
+                        console.log(`📦 Prepared ${emailProducts.length} products for email`)
+
+                        try {
+                            const emailResult = await sendDownloadEmail({
+                                to: order.customer_email,
+                                customerName: order.customer_email.split('@')[0],
+                                orderNumber: order.id.slice(0, 8),
+                                products: emailProducts
+                            })
+
+                            if (emailResult.success) {
+                                console.log('✅ Email sent successfully to:', order.customer_email)
+                            } else {
+                                console.error('❌ Email sending failed:', emailResult.error)
+                            }
+                        } catch (emailError) {
+                            console.error('❌ Email exception:', emailError)
+                        }
+                    }
                 } else {
                     console.log('⚠️ No order items found or no items with duration')
                 }

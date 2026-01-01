@@ -111,8 +111,8 @@ Deno.serve(async (req: Request) => {
             }
 
             // 2. Prepare Products List for Email
-            // Assume NEXT_PUBLIC_APP_URL is set in secrets, e.g., https://gym-it.onrender.com
-            const appUrl = Deno.env.get('NEXT_PUBLIC_APP_URL') || 'http://localhost:3000'
+            // Prioritize env var, then fallback to production URL, then localhost if explicitly needed (unlikely in deployed function)
+            const appUrl = Deno.env.get('NEXT_PUBLIC_APP_URL') || Deno.env.get('APP_URL') || 'https://gymit.fitness'
 
             const productsList = orderItems?.map((item: any) => ({
                 name: item.products?.name,

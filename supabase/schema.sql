@@ -14,6 +14,7 @@ create table public.products (
   name text not null,
   description text,
   price decimal(10, 2) not null,
+  price_usd decimal(10, 2), -- Optional USD price for international customers
   image_url text, -- Public URL for product image
   file_url text not null, -- Secure URL or path in Storage for the digital product
   is_active boolean default true,
@@ -27,6 +28,7 @@ create table public.orders (
   customer_email text not null, -- Required for product delivery
   customer_phone text, -- Optional, for MoMo payment reference if needed
   total_amount decimal(10, 2) not null,
+  currency text default 'GHS',
   status text default 'pending' check (status in ('pending', 'paid', 'failed', 'cancelled')),
   payment_provider text default 'mtn_momo',
   payment_reference text, -- External transaction ID
