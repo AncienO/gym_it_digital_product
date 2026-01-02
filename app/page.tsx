@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, Dumbbell, Wand, Trophy } from "lucide-react"
+import { ArrowRight, Dumbbell, Wand, Trophy, GraduationCap } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
 import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { HeroSection } from "@/components/HeroSection"
@@ -23,7 +23,7 @@ export default async function Home() {
       {/* Features Section */}
       <section className="py-20 bg-zinc-950">
         <div className="container px-4 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800">
               <Wand className="h-12 w-12 text-emerald-500 mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">Expert Design</h3>
@@ -38,6 +38,11 @@ export default async function Home() {
               <Trophy className="h-12 w-12 text-purple-500 mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">Athletic Performance</h3>
               <p className="text-zinc-400">Move better and prevent injury.</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800">
+              <GraduationCap className="h-12 w-12 text-amber-500 mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">Beginner-Friendly</h3>
+              <p className="text-zinc-400">Perfect for those just starting their fitness journey.</p>
             </div>
           </div>
         </div>
