@@ -1,8 +1,8 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Dumbbell, Zap, Trophy, Weight, Wand, BicepsFlexed } from "lucide-react"
+import { ArrowRight, Dumbbell, Wand, Trophy } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
 import { TestimonialsSection } from "@/components/TestimonialsSection"
+import { HeroSection } from "@/components/HeroSection"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function Home() {
@@ -18,44 +18,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-
-          <BicepsFlexed
-            className="absolute -right-30 bottom-0 md:-bottom-32 md:-right-32 w-[600px] h-[600px] md:w-[1200px] md:h-[1200px] text-emerald-600 opacity-30 -rotate-12"
-            strokeWidth={1}
-          />
-        </div>
-
-        <div className="container relative z-20 px-4 mx-auto">
-          <div className="max-w-2xl space-y-8">
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">
-              Don't know where to start on your Fitness journey? <br /> <br />
-              <span className="text-emerald-500">
-                Start here.
-              </span>
-            </h1>
-            <p className="text-xl text-zinc-300 leading-relaxed">
-              Premium digital training programs backed by research to reach your fitness goals.<br />
-              <span className="text-emerald-500">
-                Download instantly and start your journey today.
-              </span>
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/products">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg rounded-full">
-                  Browse Programs <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button variant="outline" size="lg" className="border-zinc-700 text-white hover:bg-zinc-800 px-8 py-6 text-lg rounded-full">
-                  Learn More
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Features Section */}
       <section className="py-20 bg-zinc-950">
@@ -81,7 +44,7 @@ export default async function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-black">
+      <section id="featured-products" className="py-20 bg-black">
         <div className="container px-4 mx-auto">
           <div className="flex items-center justify-between mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Programs</h2>
