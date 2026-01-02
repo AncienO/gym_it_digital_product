@@ -57,7 +57,16 @@ export function ProductCard({ product }: ProductCardProps) {
                             className="absolute top-2 left-2 bg-black/60 text-white p-1.5 rounded-full backdrop-blur-md cursor-pointer hover:bg-black/80 transition-colors z-20"
                             onClick={(e) => {
                                 e.stopPropagation()
-                                setShowPreview(true)
+                                // Detect mobile devices
+                                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+                                if (isMobile) {
+                                    // On mobile, open PDF in new tab
+                                    window.open(`/api/preview/${encodeURIComponent(product.preview_url!)}`, '_blank')
+                                } else {
+                                    // On desktop, show modal
+                                    setShowPreview(true)
+                                }
                             }}
                             title="Preview Look Inside"
                         >
