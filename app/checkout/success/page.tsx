@@ -15,9 +15,16 @@ function SuccessContent() {
     const [verificationError, setVerificationError] = useState<string | null>(null)
     const [orderItems, setOrderItems] = useState<any[]>([])
     const [downloadingItems, setDownloadingItems] = useState<Set<string>>(new Set())
+    const [isMobile, setIsMobile] = useState(false)
     const { clearCart } = useCart()
 
     const [retryCount, setRetryCount] = useState(0)
+
+    // Detect mobile on mount
+    useEffect(() => {
+        const checkMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        setIsMobile(checkMobile)
+    }, [])
 
     const fetchOrderItems = async () => {
         if (!orderId) return
@@ -162,41 +169,54 @@ function SuccessContent() {
 
             <div className="space-y-4 w-full max-w-md">
                 <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800">
-                    <h3 className="text-white font-semibold mb-4">Download your Order below</h3>
-                    <div className="space-y-3">
-                        {orderItems.length > 0 ? (
-                            orderItems.map((item) => {
-                                const isDownloading = downloadingItems.has(item.product_id)
-                                return (
-                                    <div key={item.product_id} className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                                        <span className="text-sm text-zinc-300">{item.product_name}</span>
-                                        <button
-                                            onClick={() => handleDownload(item.product_id, item.product_name)}
-                                            disabled={isDownloading}
-                                            className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white text-sm rounded-lg font-medium transition-colors"
-                                        >
-                                            {isDownloading ? (
-                                                <>
-                                                    <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                    </svg>
-                                                    Processing...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Download className="w-4 h-4 mr-2" />
-                                                    Download
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                )
-                            })
-                        ) : (
-                            <p className="text-zinc-500 text-sm">Loading your downloads...</p>
-                        )}
-                    </div>
+                    {isMobile ? (
+                        // Mobile: Show email notification
+                        <div className="text-center py-4">
+                            <h3 className="text-white font-semibold mb-2">Check Your Email!</h3>
+                            <p className="text-zinc-400 text-sm">
+                                Your order has been sent to your email inbox.
+                            </p>
+                        </div>
+                    ) : (
+                        // Desktop: Show download buttons
+                        <>
+                            <h3 className="text-white font-semibold mb-4">Download your Order below</h3>
+                            <div className="space-y-3">
+                                {orderItems.length > 0 ? (
+                                    orderItems.map((item) => {
+                                        const isDownloading = downloadingItems.has(item.product_id)
+                                        return (
+                                            <div key={item.product_id} className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
+                                                <span className="text-sm text-zinc-300">{item.product_name}</span>
+                                                <button
+                                                    onClick={() => handleDownload(item.product_id, item.product_name)}
+                                                    disabled={isDownloading}
+                                                    className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white text-sm rounded-lg font-medium transition-colors"
+                                                >
+                                                    {isDownloading ? (
+                                                        <>
+                                                            <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg>
+                                                            Processing...
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Download className="w-4 h-4 mr-2" />
+                                                            Download
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <p className="text-zinc-500 text-sm">Loading your downloads...</p>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <Link href="/products">
