@@ -114,32 +114,25 @@ export async function GET(
             })
         }
 
-        // 4. Watermark PDF
+        // 4. Watermark PDF - Only first page, bottom right
         const pdfDoc = await PDFDocument.load(fileBuffer)
-        // Standard PDF fonts don't include Poppins, so we use HelveticaBold which is standard and safe
-        // To use Poppins, we'd need to load the font file from the filesystem/URL which is heavier
         const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
         const pages = pdfDoc.getPages()
 
-        const watermarkText = `Licensed to ${item.orders?.customer_email} - Order #${orderId.slice(0, 8)}`
+        const watermarkText = `${item.orders?.customer_email} - Order #${orderId.slice(0, 8)}`
 
-        for (const page of pages) {
-            const { width, height } = page.getSize()
+        // Only stamp the first page
+        if (pages.length > 0) {
+            const firstPage = pages[0]
+            const { width, height } = firstPage.getSize()
 
-            // Top Left
-            page.drawText(watermarkText, {
-                x: 20,
-                y: height - 20,
-                size: 10,
-                font: font,
-                color: rgb(0.06, 0.73, 0.5), // Emerald Green
-                opacity: 0.8,
-            })
+            // Calculate text width to align to the right
+            const textWidth = font.widthOfTextAtSize(watermarkText, 10)
 
-            // Bottom Left
-            page.drawText(watermarkText, {
-                x: 20,
-                y: 20,
+            // Bottom Right
+            firstPage.drawText(watermarkText, {
+                x: width - textWidth - 20, // 20px from right edge
+                y: 20, // 20px from bottom
                 size: 10,
                 font: font,
                 color: rgb(0.06, 0.73, 0.5), // Emerald Green

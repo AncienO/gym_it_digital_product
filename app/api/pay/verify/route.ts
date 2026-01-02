@@ -146,8 +146,10 @@ export async function GET(request: Request) {
                     } else {
                         console.log('✅ Email credentials found')
 
-                        const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
-                            (process.env.NODE_ENV === 'production' ? 'https://gymit.fitness' : 'http://localhost:3000')
+                        // Use the production domain for download links
+                        const baseUrl = process.env.NODE_ENV === 'production'
+                            ? 'https://gymit.fitness'
+                            : 'http://localhost:3000'
 
                         console.log('🌐 Using base URL:', baseUrl)
 

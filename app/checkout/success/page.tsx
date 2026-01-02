@@ -14,6 +14,7 @@ function SuccessContent() {
     const [isVerifying, setIsVerifying] = useState(!!reference)
     const [verificationError, setVerificationError] = useState<string | null>(null)
     const [orderItems, setOrderItems] = useState<any[]>([])
+    const [downloadingItems, setDownloadingItems] = useState<Set<string>>(new Set())
     const { clearCart } = useCart()
 
     const [retryCount, setRetryCount] = useState(0)
@@ -33,6 +34,42 @@ function SuccessContent() {
         } catch (error) {
             console.error('Error fetching order items:', error)
             return false
+        }
+    }
+
+    const handleDownload = async (productId: string, productName: string) => {
+        // Add to downloading set
+        setDownloadingItems(prev => new Set(prev).add(productId))
+
+        try {
+            const response = await fetch(`/api/download/${orderId}/${productId}`)
+
+            if (!response.ok) {
+                throw new Error('Download failed')
+            }
+
+            const blob = await response.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `${productName}.pdf`
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            window.URL.revokeObjectURL(url)
+
+            // Brief success indication (optional, could use toast)
+            console.log('Download started successfully')
+        } catch (error) {
+            console.error('Download error:', error)
+            alert('Download failed. Please try again or contact support.')
+        } finally {
+            // Remove from downloading set
+            setDownloadingItems(prev => {
+                const next = new Set(prev)
+                next.delete(productId)
+                return next
+            })
         }
     }
 
@@ -128,18 +165,34 @@ function SuccessContent() {
                     <h3 className="text-white font-semibold mb-4">Download your Order below</h3>
                     <div className="space-y-3">
                         {orderItems.length > 0 ? (
-                            orderItems.map((item) => (
-                                <div key={item.product_id} className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                                    <span className="text-sm text-zinc-300">{item.product_name}</span>
-                                    <a
-                                        href={`/api/download/${orderId}/${item.product_id}`}
-                                        className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg font-medium transition-colors"
-                                    >
-                                        <Download className="w-4 h-4 mr-2" />
-                                        Download
-                                    </a>
-                                </div>
-                            ))
+                            orderItems.map((item) => {
+                                const isDownloading = downloadingItems.has(item.product_id)
+                                return (
+                                    <div key={item.product_id} className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
+                                        <span className="text-sm text-zinc-300">{item.product_name}</span>
+                                        <button
+                                            onClick={() => handleDownload(item.product_id, item.product_name)}
+                                            disabled={isDownloading}
+                                            className="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white text-sm rounded-lg font-medium transition-colors"
+                                        >
+                                            {isDownloading ? (
+                                                <>
+                                                    <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    Processing...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Download className="w-4 h-4 mr-2" />
+                                                    Download
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                )
+                            })
                         ) : (
                             <p className="text-zinc-500 text-sm">Loading your downloads...</p>
                         )}
