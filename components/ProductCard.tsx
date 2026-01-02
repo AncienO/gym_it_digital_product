@@ -146,6 +146,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     <div
                         className="relative max-w-4xl w-full max-h-[90vh] bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl animate-in zoom-in-95 duration-200"
                         onClick={e => e.stopPropagation()}
+                        onContextMenu={(e) => e.preventDefault()}
                     >
                         <button
                             onClick={() => setShowPreview(false)}
@@ -153,11 +154,11 @@ export function ProductCard({ product }: ProductCardProps) {
                         >
                             <X className="w-5 h-5" />
                         </button>
-                        <div className="p-1 bg-zinc-950/50 h-full overflow-hidden flex items-center justify-center">
-                            <img
-                                src={product.preview_url!}
-                                alt={`${product.name} Preview`}
-                                className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                        <div className="w-full h-full bg-zinc-950/50 flex items-center justify-center">
+                            <iframe
+                                src={`/api/preview/${encodeURIComponent(product.preview_url!)}`}
+                                className="w-full h-[85vh] rounded-lg"
+                                title={`${product.name} Preview`}
                             />
                         </div>
                     </div>

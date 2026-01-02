@@ -123,7 +123,7 @@ export function ProductForm({ product }: ProductFormProps) {
 
             // Upload Preview
             if (previewFile) {
-                previewUrl = await handleUpload(previewFile, 'product-images')
+                previewUrl = await handleUpload(previewFile, 'product-files')
             }
 
             // Upload Product File
@@ -310,17 +310,23 @@ export function ProductForm({ product }: ProductFormProps) {
                             </div>
                         </div>
 
-                        {/* Preview Image */}
+                        {/* Preview PDF */}
                         <div className="space-y-3">
-                            <Label className="text-zinc-300">Preview Image (Look Inside)</Label>
+                            <Label className="text-zinc-300">Preview PDF (Look Inside)</Label>
                             <div className="aspect-video w-full bg-zinc-950 border-2 border-dashed border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center transition-colors hover:border-zinc-700 relative">
                                 {previewFile || currentPreviewUrl ? (
                                     <>
-                                        <img
-                                            src={previewFile ? URL.createObjectURL(previewFile) : currentPreviewUrl}
-                                            alt="Preview"
-                                            className="h-full w-full object-cover"
-                                        />
+                                        <div className="text-center p-4">
+                                            <div className="h-12 w-12 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                                    <text x="6" y="14" fontSize="6" fill="currentColor" fontWeight="bold">PDF</text>
+                                                </svg>
+                                            </div>
+                                            <span className="text-sm text-red-500 block font-medium">
+                                                {previewFile ? previewFile.name : 'Preview PDF uploaded'}
+                                            </span>
+                                        </div>
                                         <button
                                             type="button"
                                             onClick={(e) => {
@@ -337,12 +343,12 @@ export function ProductForm({ product }: ProductFormProps) {
                                 ) : (
                                     <div className="text-center p-4">
                                         <Upload className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
-                                        <span className="text-xs text-zinc-500 block">Upload Preview</span>
+                                        <span className="text-xs text-zinc-500 block">Upload Preview PDF</span>
                                     </div>
                                 )}
                                 <Input
                                     type="file"
-                                    accept="image/*"
+                                    accept="application/pdf"
                                     onChange={(e) => setPreviewFile(e.target.files?.[0] || null)}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                 />
