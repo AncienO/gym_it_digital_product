@@ -91,6 +91,52 @@ export interface Database {
                     created_at?: string
                 }
             }
+            collections: {
+                Row: {
+                    id: string
+                    title: string
+                    description: string | null
+                    slug: string
+                    image_url: string | null
+                    is_active: boolean
+                    created_at: string
+                }
+                Insert: {
+                    id?: string
+                    title: string
+                    description?: string | null
+                    slug: string
+                    image_url?: string | null
+                    is_active?: boolean
+                    created_at?: string
+                }
+                Update: {
+                    id?: string
+                    title?: string
+                    description?: string | null
+                    slug?: string
+                    image_url?: string | null
+                    is_active?: boolean
+                    created_at?: string
+                }
+            }
+            product_collections: {
+                Row: {
+                    collection_id: string
+                    product_id: string
+                    created_at: string
+                }
+                Insert: {
+                    collection_id: string
+                    product_id: string
+                    created_at?: string
+                }
+                Update: {
+                    collection_id?: string
+                    product_id?: string
+                    created_at?: string
+                }
+            }
         }
     }
 }

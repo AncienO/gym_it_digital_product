@@ -1,18 +1,18 @@
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import { ArrowRight, Dumbbell, Wand, Trophy, GraduationCap } from "lucide-react"
-import { ProductCard } from "@/components/ProductCard"
+import { CollectionCard } from "@/components/CollectionCard"
 import { TestimonialsSection } from "@/components/TestimonialsSection"
 import { HeroSection } from "@/components/HeroSection"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function Home() {
   const supabase = await createClient()
-  const { data: featuredProducts } = await supabase
-    .from('products')
+  const { data: featuredCollections } = await supabase
+    .from('collections')
     .select('*')
     .eq('is_active', true)
     .limit(6)
-    .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
 
   return (
@@ -48,24 +48,29 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section id="featured-products" className="py-20 bg-black">
+      {/* Featured Collections */}
+      <section id="featured-collections" className="py-20 bg-black">
         <div className="container px-4 mx-auto">
           <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Programs</h2>
-            <Link href="/products" className="text-emerald-500 hover:text-emerald-400 font-medium flex items-center">
-              View All <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Collections</h2>
+            <div className="flex items-center gap-4">
+              <Link href="/consultation">
+                <Button className="bg-emerald-500 hover:bg-emerald-600 text-black font-semibold">
+                  Free Consultation
+                </Button>
+              </Link>
+              <Link href="/collections" className="text-emerald-500 hover:text-emerald-400 font-medium flex items-center">
+                View All <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts?.map((product) => (
-              <div key={product.id} className="w-full max-w-[340px] mx-auto">
-                <ProductCard product={product} />
-              </div>
+            {featuredCollections?.map((collection) => (
+              <CollectionCard key={collection.id} collection={collection} />
             ))}
-            {(!featuredProducts || featuredProducts.length === 0) && (
-              <p className="text-zinc-500 col-span-full text-center">No products available yet.</p>
+            {(!featuredCollections || featuredCollections.length === 0) && (
+              <p className="text-zinc-500 col-span-full text-center">No collections available yet.</p>
             )}
           </div>
         </div>

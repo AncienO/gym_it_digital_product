@@ -20,6 +20,10 @@ export function Navbar() {
                     <Link href="/products" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                         Products
                     </Link>
+                    <Link href="/collections" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
+                        Collections
+                    </Link>
+
                     <CurrencySelector />
                     <Link href="/cart">
                         <Button variant="ghost" size="icon" className="relative text-zinc-400 hover:text-white hover:bg-zinc-800">

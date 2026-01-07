@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { LayoutDashboard, Package, LogOut, MessageSquare, Megaphone } from "lucide-react"
+import { LayoutDashboard, Package, ShoppingCart, LogOut, CheckSquare, MessageSquare, Megaphone, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button"
 import { MobileNav } from "@/components/admin/MobileNav"
 import { createClient } from "@/lib/supabase/server"
@@ -55,6 +55,12 @@ export default async function AdminLayout({
                             Products
                         </Button>
                     </Link>
+                    <Link href="/admin/collections">
+                        <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
+                            <Layers className="mr-2 h-4 w-4" />
+                            Collections
+                        </Button>
+                    </Link>
                     <Link href="/admin/testimonials">
                         <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-800">
                             <MessageSquare className="mr-2 h-4 w-4" />
@@ -85,6 +91,6 @@ export default async function AdminLayout({
                     {children}
                 </div>
             </main>
-        </div>
+        </div >
     )
 }

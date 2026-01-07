@@ -81,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                     {/* Description Overlay */}
                     <div className={`absolute inset-0 bg-black/80 backdrop-blur-sm p-6 flex items-center justify-center transition-opacity duration-300 z-30 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                        <p className="text-white text-sm text-center font-medium leading-relaxed overflow-y-auto max-h-full scrollbar-hide">
+                        <p className="text-white text-sm text-center font-medium leading-relaxed overflow-y-auto max-h-full scrollbar-hide whitespace-pre-wrap">
                             {product.description}
                         </p>
                     </div>

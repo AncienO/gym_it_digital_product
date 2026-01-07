@@ -27,7 +27,7 @@ export default async function RootLayout({
   // Fetch the most recent active notice
   const { data: notice } = await supabase
     .from('notices')
-    .select('content')
+    .select('id, content')
     .eq('is_active', true)
     .order('created_at', { ascending: false })
     .limit(1)
