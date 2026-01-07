@@ -21,13 +21,13 @@ export function HeroSection() {
                 />
             </div>
 
-            <div className="container relative z-20 px-4 mx-auto">
+            <div className="container relative z-20 px-6 mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div className="max-w-2xl space-y-6 md:space-y-8">
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white">
+                    <div className="max-w-2xl space-y-8 md:space-y-8">
+                        <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
                             Don't know where to start on your Fitness journey? <br className="hidden md:block" /> <br className="hidden md:block" />
                             <span
-                                className="text-emerald-500 cursor-pointer hover:text-emerald-400 transition-colors inline-block mt-2 md:mt-0"
+                                className="text-emerald-500 cursor-pointer hover:text-emerald-400 transition-colors inline-block mt-3 md:mt-0"
                                 onClick={scrollToProducts}
                                 style={{
                                     animation: 'pulse-subtle 2s ease-in-out infinite'
@@ -48,20 +48,20 @@ export function HeroSection() {
                                 }
                             }
                         `}</style>
-                        <p className="text-lg md:text-xl text-zinc-300 leading-relaxed">
+                        <p className="text-base md:text-xl text-zinc-300 leading-relaxed max-w-lg">
                             Premium digital training programs backed by research to reach your fitness goals.<br className="hidden md:block" />
-                            <span className="text-emerald-500 block mt-2 md:inline md:mt-0">
+                            <span className="text-emerald-500 block mt-3 md:inline md:mt-0">
                                 Download instantly and start your journey today.
                             </span>
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2">
                             <Link href="/collections" className="w-full sm:w-auto">
-                                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white h-12 px-8 text-base md:text-lg rounded-full">
+                                <Button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white h-14 sm:h-12 px-8 text-base md:text-lg rounded-full shadow-lg shadow-emerald-900/20">
                                     Browse Collections <ArrowRight className="ml-2 h-5 w-5" />
                                 </Button>
                             </Link>
                             <Link href="/about" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:w-auto border-zinc-700 text-white hover:bg-zinc-800 h-12 px-8 text-base md:text-lg rounded-full">
+                                <Button variant="outline" className="w-full sm:w-auto border-zinc-700 text-white hover:bg-zinc-800 h-14 sm:h-12 px-8 text-base md:text-lg rounded-full">
                                     Learn More
                                 </Button>
                             </Link>
