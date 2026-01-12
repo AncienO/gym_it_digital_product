@@ -16,7 +16,7 @@ export function Navbar() {
                 <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
                     gym<span className="text-emerald-500">-it</span>
                 </Link>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 md:gap-6">
                     <Link href="/products" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                         Products
                     </Link>

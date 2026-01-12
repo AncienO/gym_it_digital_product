@@ -53,7 +53,7 @@ export default async function Home() {
         <div className="container px-4 mx-auto">
           <div className="flex items-center justify-between mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Collections</h2>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 md:gap-4">
               <Link href="/consultation">
                 <Button className="bg-emerald-500 hover:bg-emerald-600 text-black font-semibold">
                   Free Consultation
